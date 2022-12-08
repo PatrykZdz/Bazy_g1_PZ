@@ -1,105 +1,39 @@
-#lab 5 zad 3.1 - OK 
-SELECT dataPozyskania 
-,year (dataPozyskania)
-,month (dataPozyskania)
-,day(dataPozyskania)
-from zasob;
+LAB 6 Zadanie 1
+1.1
+SELECT 	AVG(waga) FROM kreatura WHERE rodzaj = 'wiking';
+1.2
+SELECT AVG(waga), rodzaj, count(*) FROM kreatura GROUP BY rodzaj;
+1.3
+SELECT rodzaj, AVG(2022-year(dataUr)) AS sredni_wiek FROM kreatura GROUP BY rodzaj;
 
-select * from zasob where month (dataPozyskania) in (7,8);
-#zadanie 3.2 - OK 
+Zadanie 2 
+2.1
+SELECT nazwa,rodzaj, SUM(waga*ilosc) FROM zasob GROUP BY nazwa, rodzaj WITH ROLLUP ORDER BY rodzaj;
+2.2
+SELECT nazwa, AVG(waga) FROM zasob WHERE ilosc >= 4 GROUP BY nazwa HAVING AVG(waga) > 10 and SUM(ilosc) >= 4;
+2.3
+SELECT rodzaj,nazwa, count(nazwa) FROM zasob GROUP BY rodzaj
+HAVING SUM(ilosc) > 1;
 
-select * from zasob where rodzaj is not null order by waga ASC;
+Zadanie 3
+3.1 
+SELECT k.nazwa, e.ilosc, e.idZasobu FROM kreatura k INNER JOIN ekwipunek e 
+INNER JOIN zasob z ON z.idZasobu=e.idZasobu ON k.idKreatury=e.idKreatury;
+3.2
+SELECT k.nazwa, z.nazwa FROM wikingowie.kreatura k INNER JOIN wikingowie.ekwipunek e 
+INNER JOIN wikingowie.zasob z ON wikingowie.z.idZasobu=wikingowie.e.idZasobu ON
+wikingowie.k.idKreatury=wikingowie.e.idKreatury;
+3.3
+SELECT * FROM kreatura k LEFT JOIN ekwipunek e ON k.idKreatury=e.idKreatury
+WHERE e.idEkwipunku IS NULL;
 
-#order by wiek ASC, rodzaj DESC;
-#order by 1 ASC , 2 DESC:
-
-#zadanie 3.3 - OK
-SELECT * from kreatura order by dataUr ASC limit 5;
-
-SELECT * from kreatura order by dataUr limit 5,5;
-
-#zadanie 4.1 
-select distinct rodzaj from zasob;
-
-select distinct nazwa,dataPozyskania from zasob;
-
-#zadanie 4.2 - do konczyć
-#funkcja concat()
-select concat(nazwa,rodzaj) from kreatura;
-select concat("Nazywam się ",nazwa) from kreatura;
-
-#zadanie 4.3 
-select nazwa,ilosc * waga from zasob
-where year (dataPozyskania) between 2000 and 2007;
-
-#zadanie 5.1 
-Select nazwa ,(ilosc*waga)*0.7 as waga_netto,
-(ilosc*waga) *0.3 as odpadki from zasob
-where rodzaj = 'jedzenie';
-
-#zadanie 5.2 
-select * from zasob where rodzaj is null;
-
-#zadanie 5.3 
-# nazwa , zasob ,rodzaj # 4 wartosci; dokoncz;
-
-select distinct rodzaj,nazwa from zasob where nazwa = 'Ba%' and '%os' ;
-
-#lab 6 zadanie 1.1
-select sum(udzwig) from kreatura;
-
-select avg(waga) from kreatura where rodzaj = 'wiking'; # dobrze;
-
-#zadanie 1.2
-select nazwa,rodzaj, avg(waga), count(*) from kreatura group by rodzaj;
-#zadanie 1.3
-select * from kreatura;
-
-select rodzaj, avg(year(dataUr)) from kreatura group by rodzaj; # zle
-
-select rodzaj, avg(2022-year(dataUr)) as sredni_wiek
-from kreatura group by rodzaj;
-
-#zadanie 2.1
-select nazwa,rodzaj, sum(waga*ilosc) from zasob group by nazwa, rodzaj with rollup order by rodzaj;
-
-select year (dataPozyskania) as rok , 
-month (dataPozyskania) as miesiac,
-count(*)
-from zasob group by rok, miesciac;
-
-#zadanie 2.2
-# ta suma = srednia
-# having filtr dla kolumn agregowanych, po agregacji.
-select rodzaj, count(nazwa) from kreatura group by rodzaj
-having count(nazwa) > 1;
-#zadanie 2.2 dobrze
-
-select nazwa, avg(waga) from zasob
-where ilosc >=4
-group by nazwa having avg(waga) > 10 and sum(ilosc) >= 4;
-
-#zadanie 2.3
-
-select rodzaj,nazwa, count(nazwa) from zasob group by rodzaj
-having sum(ilosc) > 1;
-
-#zadanie 3.1 - zlączenie tabel
-select * from kreatura, ekwipunek
-where kreatura.idKreatury=ekwipunek.idKreatury;
-
-select k.nazwa, e.ilosc, e.idZasobu from kreatura k inner join ekwipunek e
-inner join zasob z on z.idZasobu=e.idZasobu on k.idKreatury=e.idKreatury;
-
-
-select * from kreatura k left join ekwipunek e on k.idKreatury=e.idKreatury
-where e.idEkwipunku is not null; #inner join bez null left join.
-
-#zadanie 3.3 - ok /left join
-select * from kreatura k left join ekwipunek e on k.idKreatury=e.idKreatury
-where e.idEkwipunku is null;
-#pod zapytanie
-select idKreatury from kreatura where idKreatury not in (
-select distinct idKreatury from ekwipunek
-where idKreatury is not null);
-#zadanie 4 pkt 1,2 i to wszytko czego nie dokoczył
+Zadanie 4
+4.1
+SELECT k.nazwa, z.nazwa, dataUr FROM wikingowie.zasob z INNER JOIN wikingowie.kreatura k 
+INNER JOIN wikingowie.ekwipunek ON wikingowie.ekwipunek.idKreatury=k.idKreatury 
+ON wikingowie.ekwipunek.idZasobu=z.idZasobu WHERE dataUr LIKE '167%';
+4.2
+SELECT dataUr, k.nazwa, z.rodzaj FROM wikingowie.kreatura k 
+INNER JOIN wikingowie.ekwipunek e INNER JOIN wikingowie.zasob z 
+ON z.idZasobu=e.idZasobu ON k.idKreatury=e.idKreatury
+WHERE z.rodzaj='jedzenie' ORDER BY dataUr ASC LIMIT 5;
