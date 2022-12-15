@@ -47,4 +47,5 @@ from kreatura k join ekwipunek e on k.idKreatury=e.idKreatury
 join zasob z on e.idZasobu=z.idZasobu where k.rodzaj not in ('malpa','waz')
 group by k.rodzaj;
 5.2
-
+SELECT k.rodzaj, k.nazwa, k.dataUr, max(k.dataUr), min(k.dataUr) from kreatura k
+group by k.rodzaj;
