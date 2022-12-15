@@ -37,3 +37,14 @@ SELECT dataUr, k.nazwa, z.rodzaj FROM wikingowie.kreatura k
 INNER JOIN wikingowie.ekwipunek e INNER JOIN wikingowie.zasob z 
 ON z.idZasobu=e.idZasobu ON k.idKreatury=e.idKreatury
 WHERE z.rodzaj='jedzenie' ORDER BY dataUr ASC LIMIT 5;
+4.3
+select concat(k1.nazwa,' - ',k2.nazwa) from kreatura k1
+join kreatura k2 on k1.idKreatury=k2.idKreatury-5;
+Zadanie 5 
+5.1
+select k.rodzaj, sum(e.ilosc*z.waga)/count(distinct(k.nazwa)) as srednia_waga
+from kreatura k join ekwipunek e on k.idKreatury=e.idKreatury
+join zasob z on e.idZasobu=z.idZasobu where k.rodzaj not in ('malpa','waz')
+group by k.rodzaj;
+5.2
+
