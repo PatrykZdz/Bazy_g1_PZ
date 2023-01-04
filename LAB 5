@@ -16,3 +16,27 @@ SELECT * FROM kreatura WHERE rodzaj != 'wiedzma' AND udzwig <= 50;
 SELECT * FROM zasob WHERE waga BETWEEN 2 AND 5;
 2.3
 SELECT * FROM kreatura WHERE nazwa LIKE '%or%' AND udzwig BETWEEN 30 AND 70;
+Zadanie 3
+3.1
+select * from zasob where month (dataPozyskania) in (7,8);
+3.2
+select * from zasob where rodzaj is not null order by waga ASC;
+3.3
+SELECT * from kreatura order by dataUr ASC limit 5;
+Zadanie 4
+4.1
+select distinct rodzaj from zasob;
+4.2
+select concat(nazwa,rodzaj) from kreatura;
+4.3
+select nazwa,ilosc * waga from zasob
+where year (dataPozyskania) between 2000 and 2007;
+Zadanie 5
+5.1
+Select nazwa ,(ilosc*waga)*0.7 as waga_netto,
+(ilosc*waga) *0.3 as odpadki from zasob
+where rodzaj = 'jedzenie';
+5.2
+select * from zasob where rodzaj is null;
+5.3
+select distinct rodzaj,nazwa from zasob where nazwa = 'Ba%' and '%os';
