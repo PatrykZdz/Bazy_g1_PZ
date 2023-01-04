@@ -1,33 +1,13 @@
 #Lab 7 #zadanie 1
 #1.2
 #podzapytanie lub left join
-
 select * from kreatura k left join uczestnicy u on u.id_uczestnika=k.idKreatury
 where u.id_uczestnika is null;
 
 #1.3
-
 select w.nazwa, sum(e.ilosc) from wyprawa w inner join uczestnicy u on 
 w.id_wyprawy=u.id_wyprawy inner join ekwipunek e 
 on u.id_uczestnika=e.idKreatury group by w.id_wyprawy;
-
-
-#zadanie 5 (trudne)
-select 'najmlodsza', a.maxData,b.nazwa,a.rodzaj from (select max(dataUr)
-maxData,rodzaj from kreatura group by rodzaj) a,(select nazwa,dataUr from kreatura)
-b where a.maxData = b.dataUr
-union 
-select 'najstarsza' , a.minData, b.nazwa, a.rodzaj
-from(select min(dataUr) minData,rodzaj from kreatura group by rodzak)
-a,(select nazwa, dataUr from kreatura) b where a.minData = b.dataUr;
-
-# druga wersja
-select a.nazwa, a.rodzaj, a.dataUr from kreatura a,
-(select min(dataUr), min,max(dataUr) max from kreatura group by rodzaj) b 
-where b.min = a.dataUr or b.max=a.dataUr;
-
-#byl kahoot 15 dobrze 5 zle
-
 
 # Zadanie 2 
 # 2.1 
