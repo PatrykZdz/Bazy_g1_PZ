@@ -22,42 +22,36 @@ join wyprawa w on w.id_wyprawy = ew.idWyprawy
 join kreatura k on k.idKreatury=w.kierownik
 order by w.data_rozpoczecia desc, ew.kolejnosc asc;
 
-# zadanie 3 dokonczyc 
+# zadanie 3 
 # 3.1
-Select count(id_sektora) from sektor;
-select count(distinct sektor) from etapy_wyprawy;
-
-Select nazwa,ifnull(waga, 'bez wagi') as waga from kreatura;
-Select nazwa,if(waga is null, 'bez wagi', waga) as waga from kreatura;
-
-#Dobrze
 select s.nazwa, count(ew.sektor) as ile_odwidzin from sektor s left join 
 etapy_wyprawy ew on s.id_sektora=ew.sektor group by s.id_sektora;
 
 # 3.2
-
 Select k.nazwa, if(count(u.id_uczestnika)>0,'bral udział w wyprawie',
 'nie brał udziału w wyprawie') bral_czy_nie
 from kreatura k 
 left join uczestnicy u on k.idKreatury=u.id_uczestnika
 group by k.idKreatury;
 
-#wejsciowka moja
-#1. 
-select s.imie, s.nazwisko, sum(w.iloscPunktow) from student s inner
-join wyniki w on s.idStudenta= w.idStudenta
-group by s.idStudenta;
-#2.
-Select dyscyplina, avg(iloscPunktow)
-from wyniki group by dyscyplina;
-#3. 
-Select imie, nazwisko from student s left join wyniki w on s.idStudenta=w.idStudenta
-where dyscyplina/w.idStudenta is Null;
+Zadanie 4
+4.1
+select nazwa, sum(length(dziennik)) from wyprawa w 
+join etapy_wyprawy ew on ew.idWyprawy=w.id_wyprawy 
+group by nazwa having sum(length(dziennik)) < 400;
+4.2
+Select w.nazwa, ((sum(z.waga*e.ilosc))/(count(distinct(u.id_uczestnika)))) sr_waga from wyprawa w 
+join uczestnicy u on w.id_wyprawy=u.id_wyprawy 
+join ekwipunek e on u.id_uczestnika=e.idKreatury 
+join zasob z on e.idZasobu=z.idZasobu 
+group by w.nazwa;
 
-#wejsciowka 2
-select s.imie, s.nazwisko, sum(w.iloscPunktow) from studend s 
-inner join wyniki w on s.idStudenta=w.idStudenta where 
-2022-year(student.dataUrodzenia) between 20 and 29
-group by s.idStudenta;
-#zad2
-select count(distinct dyscyplina) from wyniki;
+Zadanie 5 
+5.1
+select k.nazwa, w.nazwa, datediff(data_rozpoczecia, dataUr)
+from kreatura k join uczestnicy u
+ON u.id_uczestnika=k.idKreatury join wyprawa w
+ON w.id_wyprawy=u.id_wyprawy join etapy_wyprawy ew 
+ON ew.idWyprawy=w.id_wyprawy join sektor s 
+ON s.id_sektora=ew.sektor WHERE s.nazwa="Chatka dziadka";
+
