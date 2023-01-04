@@ -47,5 +47,15 @@ from kreatura k join ekwipunek e on k.idKreatury=e.idKreatury
 join zasob z on e.idZasobu=z.idZasobu where k.rodzaj not in ('malpa','waz')
 group by k.rodzaj;
 5.2
-SELECT k.rodzaj, k.nazwa, k.dataUr, max(k.dataUr), min(k.dataUr) from kreatura k
-group by k.rodzaj;
+select 'najmlodsza', a.maxData,b.nazwa,a.rodzaj from (select max(dataUr)
+maxData,rodzaj from kreatura group by rodzaj) a,(select nazwa,dataUr from kreatura)
+b where a.maxData = b.dataUr union 
+select 'najstarsza' , a.minData, b.nazwa, a.rodzaj
+from(select min(dataUr) minData,rodzaj from kreatura group by rodzak)
+a,(select nazwa, dataUr from kreatura) b where a.minData = b.dataUr;
+
+# druga wersja
+select a.nazwa, a.rodzaj, a.dataUr from kreatura a,
+(select min(dataUr), min,max(dataUr) max from kreatura group by rodzaj) b 
+where b.min = a.dataUr or b.max=a.dataUr;
+
