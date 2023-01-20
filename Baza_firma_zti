@@ -1,0 +1,87 @@
+#Zad 1 
+select imie,nazwisko, year(data_urodzenia) from pracownik;
+#zad 2
+select imie,nazwisko, (2023-year(data_urodzenia)) from pracownik;
+#zad 3
+select d.nazwa, count(p.id_pracownika) as 'Pracownicy'
+from dzial d join pracownik p 
+on p.dzial=d.id_dzialu group by d.nazwa;
+#zad 4
+select k.nazwa_kategori, count(t.id_towaru) 
+from kategoria k join towar t on t.kategoria=k.id_kategori 
+group by k.nazwa_kategori;
+#zad 5
+select k.nazwa_kategori, group_concat(t.nazwa_towaru) 
+from kategoria k join towar t on t.kategoria=k.id_kategori 
+group by k.id_kategori;
+#zad 6
+select round(avg(pensja),2) as 'zarobki_srednie' 
+from pracownik;
+#zad 7
+select round(avg(pensja),2) as 'zarobki_srednie' 
+from pracownik where (2023-year(data_zatrudnienia))>=5;
+#zad 8
+select t.nazwa_towaru, count(pz.towar) 
+as ilosc from pozycja_zamowienia pz 
+join towar t on pz.towar=t.id_towaru
+group by towar order by ilosc desc limit 10;
+#zad 9
+select z.numer_zamowienia, sum(pz.ilosc*pz.cena) as laczna_cena from pozycja_zamowienia pz 
+join zamowienie z on pz.zamowienie=z.id_zamowienia 
+where year(z.data_zamowienia)=2017 and month(z.data_zamowienia) between 1 and 3
+group by zamowienie;
+#zad 10
+select p.imie, p.nazwisko, sum(pz.ilosc*pz.cena)
+from pracownik p 
+join zamowienie z
+on z.pracownik_id_pracownika=p.id_pracownika
+join pozycja_zamowienia pz 
+on pz.zamowienie=z.id_zamowienia
+group by p.id_pracownika 
+order by suma(pz.ilosc*pz.cena) desc;
+############################
+#zad1
+select d.nazwa, min(p.pensja), max(p.pensja), avg(p.pensja)
+from dzial d join pracownik p 
+on p.dzial=d.id_dzialu group by d.id_dzialu;
+#zad 2
+select k.pelna_nazwa, sum(pz.ilosc*pz.cena) 
+from klient k join zamowienie z on z.klient=k.id_klienta
+join pozycja_zamowienia pz 
+on pz.zamowienie=z.id_zamowienia group by k.id_klienta limit 10;
+#zad 3
+select year(z.data_zamowienia) as 'rok', 
+round(sum(pz.ilosc*pz.cena),2) as 'wartosc' 
+from zamowienie z join status_zamowienia sz 
+on sz.id_statusu_zamowienia=z.status_zamowienia
+join pozycja_zamowienia pz 
+on pz.zamowienie=z.id_zamowienia 
+where sz.nazwa_statusu_zamowienia="zrealizowane"
+group by rok order by wartosc desc;
+#zad 4
+select round(sum(pz.ilosc*pz.cena),2) as 'wartosc' 
+FROM zamowienie z join status_zamowienia sz 
+on sz.id_statusu_zamowienia=z.status_zamowienia
+join pozycja_zamowienia pz 
+on pz.zamowienie=z.id_zamowienia 
+where sz.nazwa_statusu_zamowienia="anulowane";
+#zad 7
+select year(z.data_zamowienia) as 'rok', 
+#round(sum(pz.ilosc*pz.cena)-(t.cena_zakupu*sum(pz.ilosc)),2)
+(sum(pz.ilosc*pz.cena)-(pz.ilosc*t.cena_zakupu)) as 'dochod' 
+from zamowienie z join status_zamowienia sz 
+on sz.id_statusu_zamowienia=z.status_zamowienia
+join pozycja_zamowienia pz 
+on pz.zamowienie=z.id_zamowienia join towar t
+on t.id_towaru=pz.towar
+where sz.nazwa_statusu_zamowienia="zrealizowane"
+group by rok order by dochod desc;
+#zad 9
+select monthname(data_urodzenia) as miesiac, 
+count(id_pracownika) as ilosc from pracownik 
+group by month(data_urodzenia)
+order by month(data_urodzenia) asc;
+#zad 10
+select imie, nazwisko,
+timestampdiff(month,data_zatrudnienia,now())*pensja
+as 'koszt' from pracownik;
