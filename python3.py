@@ -62,3 +62,25 @@ class PrivatAccount(Account):
     def __init__(self,account_number,balance = 0):
         self.account_number=account_number
         self.balance=balance
+
+
+
+
+class RomanToArabic:
+    def __init__(self):
+        self.roman_dict = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+
+    def roman_to_arabic(self, roman_numeral):
+        arabic_numeral = 0
+        previous_value = 0
+        i = len(roman_numeral) - 1
+        while i >= 0:
+            current_value = self.roman_dict[roman_numeral[i]]
+            if current_value >= previous_value:
+                arabic_numeral += current_value
+            else:
+                arabic_numeral -= current_value
+            previous_value = current_value
+            i -= 1
+        return arabic_numeral
+
