@@ -1,11 +1,11 @@
 # Cwiczenie 0.1
-def wartosc(tab):
-    for x in tab:
+def funkcja(lista):
+    list_no_repeat = set(lista)
+    for x in list_no_repeat:
         print(x)
 
-liczby = [1,2,3,3,2,1]
-liczby2 = list(set(liczby))
-wartosc(liczby2)
+lista1 = [1,2,3,3,2,1]
+funkcja(lista1)
 
 # Cwiczenie 0.2
 wyraz = "qwemewqawqemeqwa"
