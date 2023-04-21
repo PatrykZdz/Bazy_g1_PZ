@@ -1,3 +1,20 @@
+Napisz klase Frac liczb wymiernych, w którym beda one przechowywac sie jako para liczb calkowitych(licznik i mianownik)
+Zaimplementuj: konstruktor, mozliwosc wyswietlania przy pomocy print a/b, odejmowanie, iloraz, porownanie.
+  przykladowe uzycie print(Frac(2,6)-Frac(1,5))
+  wynik na konsoli 4/30
+  przykladowe uzycie print(Frac2,6)==Frac(1,3))
+  wynik na konsoli: True
+
+
+
+
+
+
+
+
+
+
+
 import math
 
 a=[2,1,3,4]
