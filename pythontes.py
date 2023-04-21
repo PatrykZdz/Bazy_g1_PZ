@@ -2,6 +2,33 @@ Dany jest szyfr, który zamienia wybrane samogłoski wg klucza:
 klucz = {"a": "y", "e": "i", "i": "o", "o": "a", "y": "e"}
 Np. słowo informatyka zostanie zaszyforwane na onfarmyteky. Napisz funkcję szyfrującą i deszyfrującą.
 
+def szyfruj(tekst, klucz):
+    szyfrogram = ""
+    for znak in tekst:
+        if znak.lower() in klucz:
+            if znak.islower():
+                szyfrogram += klucz[znak.lower()]
+            else:
+                szyfrogram += klucz[znak.lower()].upper()
+        else:
+            szyfrogram += znak
+    return szyfrogram
+
+
+def deszyfruj(szyfrogram, klucz):
+    tekst = ""
+    for znak in szyfrogram:
+        if znak.lower() in klucz.values():
+            for k, v in klucz.items():
+                if v == znak.lower():
+                    if znak.islower():
+                        tekst += k
+                    else:
+                        tekst += k.upper()
+                    break
+        else:
+            tekst += znak
+    return tekst
 
 import math
 
