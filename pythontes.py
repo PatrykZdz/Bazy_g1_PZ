@@ -30,6 +30,8 @@ def deszyfruj(szyfrogram, klucz):
             tekst += znak
     return tekst
 
+napisz funkcje ktora bedzie zwracala posortowana liste jako krotke.
+
 import math
 
 a=[2,1,3,4]
