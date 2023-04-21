@@ -1,3 +1,8 @@
+Dany jest szyfr, który zamienia wybrane samogłoski wg klucza:
+klucz = {"a": "y", "e": "i", "i": "o", "o": "a", "y": "e"}
+Np. słowo informatyka zostanie zaszyforwane na onfarmyteky. Napisz funkcję szyfrującą i deszyfrującą.
+
+
 import math
 
 a=[2,1,3,4]
