@@ -1,3 +1,12 @@
+
+frac1 = Frac(2, 6)
+frac2 = Frac(1, 5)
+
+print(frac1 - frac2)  # 4/30
+print(frac1 / frac2)  # 5/3
+print(frac1 == Frac(1, 3))  # True
+
+
 #Ćwiczenie 1
 names = ["michal", "nela", "ola","przemek"]
 names_upper = []
