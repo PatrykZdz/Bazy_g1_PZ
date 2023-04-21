@@ -7,6 +7,38 @@ Zaimplementuj: konstruktor, mozliwosc wyswietlania przy pomocy print a/b, odejmo
 
 
 
+class Frac:
+    def __init__(self, licznik, mianownik=1):
+        self.licznik = licznik
+        self.mianownik = mianownik
+        self._skroc()
+
+    def __str__(self):
+        return f"{self.licznik}/{self.mianownik}"
+
+    def __sub__(self, other):
+        licznik = self.licznik * other.mianownik - other.licznik * self.mianownik
+        mianownik = self.mianownik * other.mianownik
+        return Frac(licznik, mianownik)
+
+    def __truediv__(self, other):
+        licznik = self.licznik * other.mianownik
+        mianownik = self.mianownik * other.licznik
+        return Frac(licznik, mianownik)
+
+    def __eq__(self, other):
+        return self.licznik == other.licznik and self.mianownik == other.mianownik
+
+    def _skroc(self):
+        def nwd(a, b):
+            while b:
+                a, b = b, a % b
+            return a
+
+        d = nwd(self.licznik, self.mianownik)
+        self.licznik //= d
+        self.mianownik //= d
+
 
 
 
