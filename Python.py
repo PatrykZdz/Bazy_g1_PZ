@@ -1,3 +1,15 @@
+
+def deszyfruj(slowo, klucz):
+    odszyfrowane_slowo = ""
+    for litera in slowo:
+        if litera in klucz:
+            odszyfrowane_slowo += klucz[litera]
+        else:
+            odszyfrowane_slowo += litera
+    return odszyfrowane_slowo
+
+
+
 #Ćwiczenie 1
 #a)
 lista = list(range(15))
