@@ -1,3 +1,47 @@
+
+
+import numpy as np
+
+# Wczytanie pliku z cenami jaj do tablicy NumPy
+data = np.genfromtxt('jajka2023.csv', delimiter=';', dtype=('U16', 'U16', 'U16', float))
+
+# Ustawienie kodowania na 'utf-8' podczas wczytywania pliku
+data = np.genfromtxt('jajka2023.csv', delimiter=';', dtype=('U16', 'U16', 'U16', float), encoding='utf-8')
+
+# Obliczenie średniej ceny jaj
+avg_price = np.mean(data[:, 3])
+
+# Wyznaczenie najtańszych i najdroższych jajek w sieciach w miastach
+# Tworzymy słownik, gdzie kluczem jest miasto a wartością jest lista
+# (nazwa sieci, cena za 10 jajek)
+prices_dict = {}
+for row in data:
+    city = row[0]
+    network = row[1]
+    price = row[3]
+    if city not in prices_dict:
+        prices_dict[city] = [(network, price)]
+    else:
+        prices_dict[city].append((network, price))
+
+# Dla każdego miasta wybieramy najtańszą i najdroższą sieć
+result = []
+for city, prices in prices_dict.items():
+    min_price = float('inf')
+    max_price = 0
+    cheapest_network = ''
+    expensive_network = ''
+    for network, price in prices:
+        if price < min_price:
+            min_price = price
+            cheapest_network = network
+        if price > max_price:
+            max_price = price
+            expensive_network = network
+    result.append((city, cheapest_network))
+    result.append((city, expensive_network))
+
+
 select * from postac;
 # lab 4, zadanie 1a
 select * from postac 
