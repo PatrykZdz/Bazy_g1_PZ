@@ -1,3 +1,10 @@
+Kolumny : Nazwa_rzeki Kontynent Długość_w_km Powierzchnia_dorzecza_w_tys_km2 Liczba_państw_przez_które_przeplywa
+Ile rzek s¡ w tabelce? (5%) Ile s¡ w Eurazji ?(5%) Wypisz nazwy rzek, który zaczynaj¡
+si¦ z liter pó¹niejszych w alfabecie, ni» 'N' (5%) Ile rzek przepªywaj¡ wi¦cej ni» przez 2
+Pa«stwa?(5%) Wypisz nazwy rzek z dªugo±ci¡ nie mniejsz¡ ni» 4500 km, który s¡ w Eurazji
+lub w Afryce (5%). Posortuj nazwy wszystkich rzek wedªug powierzchni malej¡co.
+
+
 # Cwiczenie 1.1
 import numpy as np
 
