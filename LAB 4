@@ -1,4 +1,44 @@
 
+import numpy as np
+
+# Dane rzek
+nazwa_rzeki = np.array(['Rzeka A', 'Rzeka B', 'Rzeka C', 'Rzeka D', 'Rzeka E'])
+kontynent = np.array(['Europa', 'Azja', 'Europa', 'Afryka', 'Ameryka Północna'])
+dlugosc_w_km = np.array([1000, 2000, 3000, 4000, 5000])
+powierzchnia_dorzecza_w_tys_km2 = np.array([100, 200, 300, 400, 500])
+liczba_panstw = np.array([2, 3, 1, 2, 4])
+
+# Ile rzek jest w tabelce?
+ile_rzek = len(nazwa_rzeki)
+print(f"Ilość rzek w tabelce: {ile_rzek}")
+
+# Ile rzek jest w Eurazji?
+ile_w_eurazji = np.sum((kontynent == 'Europa') | (kontynent == 'Azja'))
+print(f"Ilość rzek w Eurazji: {ile_w_eurazji}")
+
+# Wypisanie nazw rzek, które zaczynają się od liter późniejszych w alfabecie niż 'N'
+litery_pozniejsze = np.array(['O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'])
+rzeki_pozniejsze = nazwa_rzeki[np.char.startswith(nazwa_rzeki, litery_pozniejsze)]
+print("Rzeki zaczynające się od liter późniejszych niż 'N':")
+print(rzeki_pozniejsze)
+
+# Ile rzek przepływa przez więcej niż 2 państwa?
+ile_wiecej_niz_dwa_panstwa = np.sum(liczba_panstw > 2)
+print(f"Ilość rzek przepływających przez więcej niż 2 państwa: {ile_wiecej_niz_dwa_panstwa}")
+
+# Wypisanie nazw rzek o długości większej niż 4500 km, które są w Eurazji lub Afryce
+eurazja_afryka = (kontynent == 'Europa') | (kontynent == 'Azja') | (kontynent == 'Afryka')
+rzeki_dluzsze = nazwa_rzeki[dlugosc_w_km > 4500]
+rzeki_eurazja_afryka = rzeki_dluzsze[eurazja_afryka]
+print("Rzeki o długości większej niż 4500 km w Eurazji lub Afryce:")
+print(rzeki_eurazja_afryka)
+
+# Posortowanie nazw wszystkich rzek według powierzchni malejąco
+posortowane_rzeki = nazwa_rzeki[np.argsort(powierzchnia_dorzecza_w_tys_km2)[::-1]]
+print("Posortowane nazwy rzek według powierzchni malejąco:")
+print(posortowane_rzeki)
+
+
 
 import numpy as np
 
