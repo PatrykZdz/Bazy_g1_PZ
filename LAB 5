@@ -1,5 +1,13 @@
 
 
+U»yj wbudowanej w seaborn bazy exercise
+https://github.com/mwaskom/seaborn-data
+Zrób wykresy punktowy zale»no±ci pulsu od czasu (attention) dla ka»dego typu aktywno±ci
+(kind) w jednym okienku. Kolorem (oletowy  purple, limonkowy  lime) zaznacz dieta.
+
+
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
