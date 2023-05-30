@@ -1,5 +1,30 @@
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+x1 = np.linspace(0, 2, 100)
+y1 = x1 ** 3
+
+x2 = np.linspace(0, 512, 100)
+y2 = np.sqrt(3) * x2
+
+# Rysowanie wykresów
+plt.plot(x1, y1, 'r-', label='y = x^3')
+plt.plot(x2, y2, 'g-', label='y = √3x')
+
+# Ustawienie etykiet osi
+plt.xlabel('x')
+plt.ylabel('y')
+
+# Dodanie legendy
+plt.legend()
+
+# Wyświetlenie wykresu
+plt.show()
+
+
+
 Wypisz nazwy rzek, który zaczynaj¡ si¦ z liter pó¹niejszych w alfabecie, ni» 'N'
 Wypisz nazwy rzek z dªugo±ci¡ nie mniejsz¡ ni» 4500 km, który s¡ w Eurazji lub w Afryce
 
