@@ -5,6 +5,16 @@ Pa«stwa?(5%) Wypisz nazwy rzek z dªugo±ci¡ nie mniejsz¡ ni» 4500 km, któr
 lub w Afryce (5%). Posortuj nazwy wszystkich rzek wedªug powierzchni malej¡co.
 
 
+Wypisz nazwy rzek, który zaczynaj¡ si¦ z liter pó¹niejszych w alfabecie, ni» 'N'
+Wypisz nazwy rzek z dªugo±ci¡ nie mniejsz¡ ni» 4500 km, który s¡ w Eurazji lub w Afryce
+
+Narysuj wykresy funkcji y = x
+3
+(ciemno czerwony) na [0, 2] oraz y =
+√3 x(ciemno-zielony) na [0, 512]
+w jednym okienku na dwóch wykresach, podpisuj¡c który kolor odpowiada której funkcji. Kolory,
+typ linii, miejsca wykresów oraz miejsce podpisu musz¡ by¢ taki same jak na obrazku.
+
 
 
 # Cwiczenie 1.1
