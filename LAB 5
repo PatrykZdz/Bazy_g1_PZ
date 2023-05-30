@@ -13,6 +13,33 @@ data = {
 
 df = pd.DataFrame(data)
 
+# Ustalenie kolorów dla poszczególnych metod
+kolory = {'Astrometry': 'black', 'Radial Velocity': 'navy', 'Transit': 'red', 'Imaging': 'green', 'Eclipse Timing Variations': 'purple'}
+
+# Wygenerowanie wykresu punktowego dla wszystkich grup naraz
+plt.scatter(df['year'], df['distance'], c=df['method'].map(kolory))
+
+plt.xlabel('Rok')
+plt.ylabel('Dystans do galaktyki')
+plt.legend(kolory.keys())
+plt.title('Zależność dystansu od roku dla różnych metod wykrywania')
+plt.show()
+
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Tworzenie DataFrame z danymi
+data = {
+    'method': ['Transit', 'Radial Velocity', 'Transit', 'Astrometry', 'Imaging', 'Transit'],
+    'orbital_period': [200, 500, 300, 1000, 800, 400],
+    'distance': [1000, 2000, 1500, 3000, 2500, 1800],
+    'year': [2010, 2012, 2011, 2010, 2012, 2011]
+}
+
+df = pd.DataFrame(data)
+
 # Znajdź największy dystans do galaktyki, wykrytej metodą 'Transit'
 najwiekszy_dystans = df.loc[df['method'] == 'Transit', 'distance'].max()
 print(f"Największy dystans do galaktyki, wykrytej metodą 'Transit': {najwiekszy_dystans}")
