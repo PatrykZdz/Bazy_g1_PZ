@@ -1,3 +1,30 @@
+
+
+
+
+kolumny method orbital_period distance year
+Znajd¹ najwi¦kszy dystans do galaktyki, wykrytej metod¡ 'Transit'? (5%)
+ W którym roku wykryto najwi¦cej galaktyk? (5%)
+ Narysuj wykres koªowy, dotycz¡ce ilo±ci galaktyk, wykrytych ka»d¡ metod¡. (10%)
+ Narysuj wykres punktowy zale»no±ci dystansu od roku. Kolorem oznacz metod¡ wykrywania.
+(10%)
+ Astrometry  black
+ Radial Velocity  granatowy
+ Transit  czerwony
+ Imaging  green
+ Eclipse Timing Variations  oletowy (purple)
+
+
+
+
+
+
+
+
+
+
+
+
 Zadanie 1 
 1.1
 CREATE TABLE kreatura SELECT * FROM wikingowie.kreatura;
