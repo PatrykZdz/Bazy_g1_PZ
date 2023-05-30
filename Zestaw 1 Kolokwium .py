@@ -5,6 +5,8 @@ Pa«stwa?(5%) Wypisz nazwy rzek z dªugo±ci¡ nie mniejsz¡ ni» 4500 km, któr
 lub w Afryce (5%). Posortuj nazwy wszystkich rzek wedªug powierzchni malej¡co.
 
 
+
+
 # Cwiczenie 1.1
 import numpy as np
 
