@@ -1,3 +1,19 @@
+import seaborn as sns
+
+# Wczytanie danych z bazy "exercise" z seaborn
+data = sns.load_dataset("exercise")
+
+# Ustalenie kolorów dla poszczególnych typów aktywności
+kolory = {'rest': 'purple', 'walking': 'lime', 'running': 'lime', 'cycling': 'lime', 'swimming': 'lime'}
+
+# Wygenerowanie wykresu punktowego dla zależności pulsu od czasu dla każdego typu aktywności
+sns.scatterplot(data=data, x='time', y='pulse', hue='kind', palette=kolory)
+
+# Ustawienie tytułu wykresu
+plt.title('Zależność pulsu od czasu dla różnych typów aktywności')
+
+# Wyświetlenie wykresu
+plt.show()
 
 
 U»yj wbudowanej w seaborn bazy exercise
