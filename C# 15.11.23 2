@@ -1,0 +1,198 @@
+using System.Globalization;
+using System.IO.Pipes;
+using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Principal;
+
+namespace isi_gr1_1
+{
+    public partial class Form1 : Form
+    {
+        
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            int liczbaN = (int)nudLiczbaN.Value;
+            long wynik = Fib2(liczbaN);
+            MessageBox.Show(wynik.ToString());
+           
+        }
+        long Fib2(int n)
+        {
+            if (n == 0 || n == 1) return n;
+
+            long[] wyrazy = new long[n + 1];
+            wyrazy[1] = 1;
+            for (int i = 2; i < wyrazy.Length; i++)
+            {
+                wyrazy[i] = wyrazy[i - 1] + wyrazy[i - 2];
+
+            }
+            return wyrazy[n];
+        }
+        void Bubble(int[] tab)
+        {
+            bool czyZamiana;
+            int temp;
+            do
+            {
+                czyZamiana = false;
+                for (int i = 0; i < tab.Length - 1; i++)
+                {
+                    if (tab[i] > tab[i + 1])
+                    {
+                        czyZamiana = true;
+                        temp = tab[i];
+                        tab[i] = tab[i + 1];
+                        tab[i + 1] = temp;
+                    }
+                }
+            } while (czyZamiana);
+        }
+        void SelectionSort(int[] tab)
+        {
+            for(int i = 0; i < tab.Length-1;i++)
+            {
+                int minIndex = i;
+                for(int j = i+1; j < tab.Length;j++)
+                {
+                    if (tab[j] < tab[minIndex])
+                    {
+                        minIndex = j;
+                    }
+                    int temp = tab[i];
+                    tab[i] = minIndex;
+                    tab[minIndex] = temp;
+                }
+            }
+        }
+        // InsertSort 
+        string Tostring(int[] tab)
+        {
+            string wynik = "";
+            for (int i = 0; i < tab.Length; i++)
+            {
+                wynik += tab[i] + " ";
+            }
+            return wynik;
+        }
+        private void label1_Click(object sender, EventArgs e)
+        {
+            int[] tab = { 7, 2, 5, 4, 1 };
+            Bubble(tab);
+            string tekst = Tostring(tab);
+        }
+        int[] Convert(string napis)
+        {
+            var liczbyString = napis.Trim().Split(' ');
+            int[] tablica = new int[liczbyString.Length];
+            for(int i = 0;i <liczbyString.Length;i++)
+            {
+                tablica[i] = int.Parse(liczbyString[i]);
+            }
+            return tablica;
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            string napis = "5 4 3 7 2";
+            int[] liczby = Convert(napis);
+            Bubble(liczby);
+            /// Wypisanie tego liczby ???
+            int[] numbers = { 5, 7, 2, 3, 4 };
+            SelectionSort(numbers);
+        }
+
+        string napis = " ";
+        class Węzeł
+        {
+            public int wartosc;
+            public List<Węzeł> dzieci = new List<Węzeł>();
+            public Węzeł(int liczba)
+            {
+                this.wartosc = liczba;
+            }
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var w1 = new Węzeł(5);
+            var w2 = new Węzeł(3);
+            var w3 = new Węzeł(1);
+            var w4 = new Węzeł(2);
+            var w5 = new Węzeł(6);
+            var w6 = new Węzeł(4);
+            w1.dzieci.Add(w2);
+            w1.dzieci.Add(w3);
+            w1.dzieci.Add(w4);
+            w2.dzieci.Add(w5);
+            w2.dzieci.Add(w6);
+         
+           A(w1);
+           /// MessageBox.Show(napis);
+        }
+        void A(Węzeł w)
+        {
+            MessageBox.Show(w.wartosc.ToString());
+            for (int i = 0; i < w.dzieci.Count;i++)
+            {
+                A(w.dzieci[i]);
+            }
+        }
+
+        class Węzeł2
+        {
+            public int wartosc;
+            public List<Węzeł2> sasiedzi = new List<Węzeł2>();
+            public Węzeł2(int liczba)
+            {
+                this.wartosc = liczba;
+            }
+
+            public void Add(Węzeł2 s)
+            {
+                if (s == this)
+                    return;
+                if (!this.sasiedzi.Contains(s))
+                    this.sasiedzi.Add(s);
+                if (!s.sasiedzi.Contains(this))
+                    s.sasiedzi.Add(this);
+                // this.sasiedzi.Add(s);
+                // s.sasiedzi.Add(this);
+
+            }
+        }
+        private void Wezel2_Click(object sender, EventArgs e)
+        {
+            var w1 = new Węzeł2(1);
+            var w2 = new Węzeł2(2);
+            var w3 = new Węzeł2(3);
+            var w4 = new Węzeł2(4);
+            var w5 = new Węzeł2(5);
+            var w6 = new Węzeł2(6);
+            w1.sasiedzi.Add(w2);
+            w2.sasiedzi.Add(w4);
+            w2.sasiedzi.Add(w5);
+            w4.sasiedzi.Add(w6);
+            w6.sasiedzi.Add(w3);
+            A2(w1);
+        }
+        void A2(Węzeł2 w)
+        {
+            MessageBox.Show(w.wartosc.ToString());
+            for (int i = 0; i < w.sasiedzi.Count; i++)
+            {
+                A2(w.sasiedzi[i]);
+            }
+        }
+
+        ///    1
+        ///   / \ ** tu jest roznica dokonczy wpasc na pomyls 
+        ///  2   3 
+        /// / \   \
+        // 4   5   6
+        // \       /
+        //   - - - 
+    }
+}
