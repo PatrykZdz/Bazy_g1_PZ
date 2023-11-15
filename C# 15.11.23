@@ -1,0 +1,41 @@
+        class Węzeł2
+        {
+            public int wartosc;
+            public List<Węzeł2> sasiedzi = new List<Węzeł2>();
+            public Węzeł2(int liczba)
+            {
+                this.wartosc = liczba;
+            }
+
+            public void Add(Węzeł2 s)
+            {
+                if (s == this)
+                    return;
+                if (!this.sasiedzi.Contains(s))
+                    this.sasiedzi.Add(s);
+                if (!s.sasiedzi.Contains(this))
+                    s.sasiedzi.Add(this);
+               // this.sasiedzi.Add(s);
+               // s.sasiedzi.Add(this);
+            }
+        }
+
+        private void Wezel2_Click(object sender, EventArgs e)
+        {
+            var w1 = new Węzeł2(1);
+            var w2 = new Węzeł2(2);
+            var w3 = new Węzeł2(3);
+            var w4 = new Węzeł2(4);
+            var w5 = new Węzeł2(5);
+            w1.Add(w2);
+            
+            A2(w1);
+        }
+        void A2(Węzeł2 w)
+        {
+            MessageBox.Show(w.wartosc.ToString());
+            for (int i = 0; i < w.sasiedzi.Count; i++)
+            {
+                A2(w.sasiedzi[i]);
+            }
+        }
