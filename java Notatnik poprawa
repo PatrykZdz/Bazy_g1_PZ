@@ -1,0 +1,135 @@
+[14:47] Kacper Browarek
+public String firstName, lastName, fieldOfStudy;
+ 
+    public Student(String firstName, String lastName, String fieldOfStudy) {
+
+        this.firstName = firstName;
+
+        this.lastName = lastName;
+
+        this.fieldOfStudy = fieldOfStudy;
+
+        System.out.println("3 arg");
+
+    }
+ 
+    public Student(String firstName, String lastName) {
+
+        this(firstName,lastName,"unknown");
+
+        System.out.println("2 arg");
+
+    }
+ 
+    public static void main(String[] args) {
+
+        new Student("f","l");
+
+    }
+ 
+public class Book {
+
+    public String title, author;
+
+    public int numberOfPages;
+ 
+    public Book(String title, String author, int numberOfPages) {
+
+        this.numberOfPages = (numberOfPages < 0) ? 1 : numberOfPages;
+
+        this.title = (title.isEmpty() || title == null) ? "" : title;
+
+        this.author = (author.isEmpty() || author == null) ? "" : author;
+
+    }
+ 
+    @Override
+
+    public String toString(){
+
+        return "Book: " + title + "\nby " + author + "\nPages: " + numberOfPages;
+
+    }
+ 
+    public boolean isEqual(Object obj) {
+
+        if (obj instanceof Book b) {
+
+            return b.author.equals(author) && b.title.equals(title) && b.numberOfPages == numberOfPages;
+
+        }
+
+        return false;
+
+    }
+
+}
+ 
+ 
+public class Vehicle1 {
+
+    public String brand, model;
+ 
+    public Vehicle1(String brand, String model) {
+
+        this.brand = brand;
+
+        this.model = model;
+
+    }
+
+}
+ 
+class Car1 extends Vehicle1 {
+
+    public int numberOfDoors;
+ 
+    public Car1(String brand, String model, int numberOfDoors) {
+
+        super(brand, model);
+
+        this.numberOfDoors = numberOfDoors;
+
+    }
+
+}
+ 
+ 
+public class Vehicle2 {
+
+    public void drive(){
+
+        System.out.println("The vehicle is moving.");
+
+    }
+
+}
+ 
+class Car2 extends Vehicle2{
+
+    @Override
+
+    public void drive() {
+
+        super.drive();
+
+        System.out.println("This is a car.");
+
+    }
+ 
+ 
+public class zad1{
+
+    public static String capitalizeEverySecond(StringBuilder sb){
+
+        for(int i = 1; i < sb.length(); i += 2){
+
+            sb.setCharAt(i, Character.toUpperCase(sb.charAt(i)));
+
+        }
+
+        return sb.toString();
+
+    }
+
+}
