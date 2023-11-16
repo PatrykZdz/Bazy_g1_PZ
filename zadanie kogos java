@@ -1,0 +1,63 @@
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        //zad1();
+        //zad2();
+        //zad3();
+        //zad4();
+        //zad5();
+        //zad6();
+        zad7();
+    }
+    public static void zad1(){
+        Animal animal = new Animal("Zebra");
+        Animal animal2 = new Animal("Zebra");
+        System.out.println(animal);
+        System.out.println(animal.equals(animal2));
+        animal2.makeSound();;
+        Cat kot = new Cat("Filemon");
+        kot.makeSound();
+        System.out.println(kot.name);
+    }
+    public static void zad2(){
+        var buf = new StringBuffer("test");
+        capitalizeEverySecond(buf);
+        System.out.println(buf.toString());
+    }
+    public static void capitalizeEverySecond(StringBuffer b){
+        int length = b.length();
+        for(int i = 1; i < length; i +=2){
+            b.setCharAt(i, Character.toUpperCase(b.charAt(i)));
+        }
+    }
+    public static void zad3(){
+        Student student = new Student("Jan", "Kowalski");
+        System.out.println(Student.fieldOfStudy);
+    }
+    public static void zad4(){
+        Car c1 = new Car("Opel", "idk", 4);
+        System.out.println(c1.brand + " " + c1.getModel() + " " + c1.numberOfDoors);
+        System.out.println(c1.getModel());
+        c1.setModel("cos");
+        System.out.println(c1.getModel());
+    }
+    public static void zad5(){
+        Car2 car2 = new Car2();
+        car2.drive();
+    }
+    public static void zad6(){
+        int[] tab1 = {1, 2, 3};
+        int[] tab2 = {4, 5, 6};
+        System.out.println(mergeArrays(tab1, tab2));
+    }
+    public static ArrayList<Integer> mergeArrays(int[] tab1, int[] tab2){
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        for(int i : tab1) list.add(i);
+        for(int i : tab2) list.add(i);
+        return list;
+    }
+    public static void zad7(){
+        Settings settings = new Settings();
+    }
+}
