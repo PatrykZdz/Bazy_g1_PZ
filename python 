@@ -1,0 +1,132 @@
+
+n = int(input("Podaj liczbe naturalną n: "))
+#a)
+def NWD(a,b):
+    for dzielnik in range(n,0,-1):
+        if (a % dzielnik == 0 and b % dzielnik == 0):
+            return dzielnik
+def wzajemnie_pierwsze(n):
+    wzajemnie_pierwsze_lista = []
+    for liczba in range(1,n):
+        if NWD(n,liczba) == 1:
+            wzajemnie_pierwsze_lista.append(liczba)
+    return wzajemnie_pierwsze_lista
+
+print(f"Liczby wzajemnie pierwsze z {n}: {wzajemnie_pierwsze(n)}")
+
+'''for x in range(n,1,-1): ### jedynka nie wlacznie ale od n wlacznie malejaca
+   print(x)'''
+
+
+
+#b)
+def dzielniki(n):
+    lista_dzielnikow = []
+    for liczba in range(1,n):
+        if n % liczba == 0:
+            lista_dzielnikow.append(liczba)
+    return lista_dzielnikow
+
+print(dzielniki(n))
+
+def liczba_doskonała(n):
+    ## range do dlugosc listy i po indeksach
+    ## sekwencja indeksow
+    ## for i in range(len(dzielniki(n))):
+    ##dzielnik = dzielniki(n)[i]
+    ## dostanie sie do elementow
+
+    ## len dlugosc napisu
+    ## dzielniki(n) poprostu pokolei elementy tablicy
+    suma = 0
+    for dzielnik in dzielniki(n):
+        suma += dzielnik
+    return suma == n
+
+print(liczba_doskonała(n))
+
+#c)
+def liczba_pierwsza(liczba):
+    for dzielnik in range(2,liczba):
+        if liczba % dzielnik == 0:
+            return False
+    return True
+
+print("Czy jest pierwsza:", liczba_pierwsza(n))
+
+def pierwsze_podzielniki(n):
+    lista = []
+    for dzielnik in range(2,n+1):
+        if n % dzielnik == 0 and liczba_pierwsza(dzielnik):
+            lista.append(dzielnik)
+    return lista
+print(pierwsze_podzielniki(n))
+
+
+#d)
+def Fibbonaci(n):
+    lista = [0,1]
+    for i in range(2,n):
+        kolejna_wyraz = lista[i-1] + lista[i-2]
+        lista.append(kolejna_wyraz)
+    return lista
+
+def Najwieksza(n):
+    for liczba in reversed(Fibbonaci(n)):
+        if n > liczba:
+            return liczba
+
+print(Najwieksza(n))
+
+## indeksami bez reversed
+'''
+def find_largest_fibonacci(n):
+    fib_list = fibonacci(n)
+    for i in range(len(fib_list)-1, -1, -1):
+        if n > fib_list[i]:
+            return fib_list[i]
+'''
+
+#e)
+def abc1(n):
+    for a in range(1,n):
+        for b in range(1,n):
+            for c in range(1,n):
+                if (n == a**2+b**2+c**2):
+                    return a,b,c
+print(abc1(n))
+
+'''
+def abc1(n):
+    limit = int(n**0.5) + 1 /// optymalizacja kwadratow
+    for a in range(1, limit):
+        for b in range(a, limit):
+            for c in range(b, limit):
+                if a**2 + b**2 + c**2 == n:
+                    return a, b, c
+    return None
+'''
+
+
+
+def abc2(n):
+    lista_wynikow = []
+    for a in range(0, n):
+        for b in range(0, n):
+            for c in range(0, n):
+                if (n == a ** 2 + b ** 2 + c ** 2):
+                    lista_wynikow.append((a,b,c))
+    return lista_wynikow
+
+print(abc2(n))
+
+#Zadanie 2
+def abcd(n):
+    for a in range(0, n):
+        for b in range(0, n):
+            for c in range(0, n):
+                for d in range(0,n):
+                    if (n == a ** 2 + b ** 2 + c ** 2 + d **2):
+                        return a, b, c, d
+
+print(abcd(n))
