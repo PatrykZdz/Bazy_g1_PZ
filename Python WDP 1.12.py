@@ -44,3 +44,14 @@ print(unikalnosc(array))
 
 ## wszystko co bylo i to co dzisiaj
 # wynik = [8,2,5,1,4]
+
+import random
+size = int(input("Podaj rozmiar tablicy"))
+def generuj(size,min = 0, max = 100):
+    tab = []
+    for x in range(size):
+        liczba = random.randint(min,max)
+        tab.append(liczba)
+    return tab
+
+print(generuj(size))
