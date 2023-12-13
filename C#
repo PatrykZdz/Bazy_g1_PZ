@@ -1,0 +1,69 @@
+        public Węzeł3 Usun(Węzeł3 w)
+        {
+            if (w == null)
+                return null;
+
+            // 1) gdy nie ma dzieci
+            if (w.lewe == null && w.prawe == null)
+            {
+                if (w.rodzic != null)
+                {
+                    if (w.rodzic.lewe == w)
+                        w.rodzic.lewe = null;
+                    else
+                        w.rodzic.prawe = null;
+                }
+                else
+                {
+                    // Usuwamy korzeń
+                    this.korzeń = null;
+                }
+
+                return null;
+            }
+
+            // 2) gdy jest 1 dziecko
+            if (w.lewe == null)
+            {
+                if (w.rodzic != null)
+                {
+                    if (w.rodzic.lewe == w)
+                        w.rodzic.lewe = w.prawe;
+                    else
+                        w.rodzic.prawe = w.prawe;
+                }
+                else
+                {
+                    // Usuwamy korzeń
+                    this.korzeń = w.prawe;
+                    this.korzeń.rodzic = null;
+                }
+
+                return w.prawe;
+            }
+            else if (w.prawe == null)
+            {
+                if (w.rodzic != null)
+                {
+                    if (w.rodzic.lewe == w)
+                        w.rodzic.lewe = w.lewe;
+                    else
+                        w.rodzic.prawe = w.lewe;
+                }
+                else
+                {
+                    // Usuwamy korzeń
+                    this.korzeń = w.lewe;
+                    this.korzeń.rodzic = null;
+                }
+
+                return w.lewe;
+            }
+
+            // 3) gdy są oba dzieci
+            Węzeł3 następnik = Następny(w);
+            w.wartosc = następnik.wartosc;
+            Usun(następnik);
+
+            return w;
+        }
