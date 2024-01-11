@@ -1,0 +1,253 @@
+/// Rozroznianie wyrzucenia wyjatku a wypisanie wyjatku
+
+package Zad1;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+/// Zad 1
+/// Rozroznianie wyrzucenia wyjatku a wypisanie wyjatku
+public class Main {
+    public static void main(String[] args)
+
+    {
+        ///Scanner scanner = new Scanner(System.in);
+        while(true)
+        {
+            Scanner scanner = new Scanner(System.in);
+            try {
+                System.out.print("Podaj a: ");
+                int a = scanner.nextInt();
+                System.out.print("Podaj b: ");
+                int b = scanner.nextInt();
+                int wynik = podzial(a,b);
+                System.out.println(wynik);
+                break;
+            }
+            catch (ArithmeticException e)
+            {
+                System.out.println("Nie mozna dzielic przez 0");
+            }
+            catch (InputMismatchException b)
+            {
+                System.out.println("Brak danych");
+               ///scanner.nextLine(); /// Wczytuje kolejne dzialanie
+            }
+        }
+        }
+    public static int podzial(int a,int b)
+    {
+        return a/b;
+    }
+}
+
+
+/// Zad 2
+package Zad2;
+/// obluga(try catch) i wyrzuc thows (wyjatek)
+import java.util.stream.Stream;
+
+public class NiepoprawnyFormatDanychException extends Exception{
+
+    public NiepoprawnyFormatDanychException(String a)
+    {
+        super(a);
+    }
+    public static void sprawdzFormatDanych(String dane) throws NiepoprawnyFormatDanychException
+    {
+        if(dane.isEmpty())
+        {
+            throw new NiepoprawnyFormatDanychException("Pusty");
+        }
+        return;
+        //else
+        //{
+            //System.out.println(dane);
+       // }
+        // / Projekt ma byc w Java21
+
+    }
+    public static void main(String[] args)
+    {
+        try {
+            sprawdzFormatDanych("");
+        }
+        catch (NiepoprawnyFormatDanychException e)
+        {
+            System.out.println("Bylo puste");
+        }
+    }
+}
+/// Roznica w Comparator, Comparable
+
+/// Zad3
+package Zad3;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Product implements Comparable<Product>
+{
+    public String name;
+    public double price;
+    public int productionYear;
+
+    public Product(String name, double price, int productionYear) {
+        this.name = name;
+        this.price = price;
+        this.productionYear = productionYear;
+        /// Pamietac o konstuktorach
+    }
+    public static void main(String[] args)
+    {
+        /// tablica, lista tablicowa
+        ArrayList<Product> lista = new ArrayList<>(5);
+        lista.add(new Product("Maka",19.99,2000));
+        lista.add(new Product("Maka",19.99,2023));
+        lista.add(new Product("Maka",19.99,2054));
+        lista.add(new Product("Maka",19.99,2032));
+        lista.add(new Product("Maka",19.99,2076));
+        Collections.sort(lista); /// Sorotowanie
+
+        System.out.println(lista);
+    }
+    @Override
+    /// Zwraca liczby (znaki: -1,0,1)
+    public int compareTo(Product o) {
+        return Integer.compare(this.productionYear,o.productionYear);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Product{" +
+                "productionYear=" + productionYear +
+                '}';
+    }
+}
+
+
+/// Zad 4
+package Zad4;
+import java.util.Comparator;
+
+public class LastNameCompartort implements Comparator<Person> {
+    @Override
+    public int compare(Person o1, Person o2) {
+        return o1.lastName.compareTo(o2.lastName);
+    }
+}
+
+package Zad4;
+/// Tworzenie wlasnych interface
+import java.util.Comparator;
+
+public class BirthDateComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person o1, Person o2) {
+        return Integer.compare(o2.birthYear,o1.birthYear); /// Sortownie rosnace
+    }
+}
+package Zad4;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class Main {
+    public static void main(String[] args)
+    {
+        Person[] people = {new Person("Anna","Dawid",1979),
+                new Person("Zbyszek","Dawid",1794),
+                new Person("Jadwiga","Dawid",1799)};
+
+        Arrays.sort(people,new BirthDateComparator());
+        ///System.out.println(Arrays.toString(people));
+
+        for(var e: people)
+        {
+            System.out.println(e);
+        }
+        System.out.println();
+        Arrays.sort(people,new LastNameCompartort());
+        for(var e: people)
+        {
+            System.out.println(e);
+        }
+
+    }
+}
+
+package Zad4;
+import java.util.ArrayList;
+
+public class Person {
+
+    public String firstName;
+    public String lastName;
+    public int birthYear;
+
+    public Person(String firstName, String lastName, int birthYear) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthYear = birthYear;
+    }
+    @Override
+    public String toString() {
+        return "Person{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthYear=" + birthYear +
+                '}';
+    }
+}
+/// Zad 5
+
+package Zad5;
+
+public interface Powiadomienie {
+    void wyslij(String wiadmosc); // Metoda abstrakcyjna
+}
+package Zad5;
+public class Uzytkownik {
+    private Powiadomienie powiadomienie;
+
+    public Uzytkownik(Powiadomienie powiadomienie) {
+        this.powiadomienie = powiadomienie;
+    }
+    public void powiadomOModernizacji(String informacja)
+    {
+        powiadomienie.wyslij(informacja);
+    }
+}
+package Zad5;
+public class Discord implements Powiadomienie{
+
+    @Override
+    public void wyslij(String wiadmosc) {
+        System.out.println("Wysylam wiadomosc discord: "+ wiadmosc);
+    }
+}
+
+package Zad5;
+public class Email implements Powiadomienie{
+
+    @Override
+    public void wyslij(String wiadmosc) {
+        System.out.println("Wysylam wiadomsc mailowa: "+ wiadmosc);
+    }
+}
+
+
+package Zad5;
+public class Main {
+    public static void main(String[] args)
+    {
+        Uzytkownik user = new Uzytkownik(new Discord());
+        Uzytkownik user2 = new Uzytkownik(new Email());
+        user.powiadomOModernizacji("Hejka");
+        user2.powiadomOModernizacji("Hejka");
+    }
+}
+
+
+
+
