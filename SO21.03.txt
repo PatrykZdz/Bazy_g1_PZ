@@ -1,0 +1,56 @@
+Zad 1
+echo "jest słabo" > dane22
+less dane22
+ls -l >> dane22 && pwd >> dane22
+
+"
+Zad 2 
+who | wc -l 
+
+d) find . -type f -iname "[a-fw]*" -exec cat {} \;
+
+Zad 3
+b)find . -type f \(-name "a*" -o  -name "[c-e]* -o  -name "w*" \)
+-o = or 
+
+find . -type f \( -name "a*" -o  -name "[c-e]* -o -name "w*" \) ec cat {} +| wc -l
+
+
+
+Nowe zadania 
+1.  ls /bin /usr/bin | grep zip
+ls /bin > lista-bin.txt
+grep co gdzie 
+
+	  lista*.tx
+grep bzip lista-bin.txt
+
+
+. * ? ^ 
+^ na poczatku wiersza
+$ na koncu wiersza
+
+grep 'zip$' lista-bin.txt
+grep '^[A-Z]' lista-bin.txt
+
+grep '^[a-b].c' lista-bin.txt - pozycja liter 
+
+man7 - obsługa linuxa 
+
+grep '^[a-b].c' *.txt
+
+Lab 5
+Zad 1
+a)echo $HOME Zobaczenie ustawień pojedyńczej zmiennej np.zmienna HOME (nazwa zmiennej poprzedzona znakiem $).
+b) echo $_  - pokazuje ostatnio występujący tekst w linii rokazow 
+_ - zmienna zdefiniowana 
+ 
+Zad 2
+nano tekst21_03.txt
+
+Zad 3
+a)grep '^ala*' *.txt
+b)grep 'ala$' *.txt
+c) 
+
+grep -E "[0-9]{3}-[0-9]{3}-[0-9]{3} nazwa 
