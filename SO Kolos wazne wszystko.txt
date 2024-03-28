@@ -1,0 +1,175 @@
+Rzeczy na kolokwium
+1. Przemieszczanie sie po katalogach 
+ls
+ls -l 
+ls -a
+pwd 
+tree 
+
+2. Tworzenie plików, katalogów, dawanie uprawnień, czytanie zawartosci 
+mkdir 
+man mkdir
+mkdir -m 777 nowyfolder
+ls -l
+touch
+nano
+echo "costam" > plik
+less plik
+cat plik
+nano plik
+
+3. Usuwanie plików, katalogow, dodawanie do plikow i tworzenie plikow 
+rm plik
+man rm
+rm -v plik
+rm -v plik >> log.txt
+rm -v plik >> log.txt 2>> log.txt (2- błąd)
+less log.txt
+
+> log.txt - czyszczenie pliku
+cd ..
+cd ~
+cd    - powrot do katlogu domowego
+
+rmdir nowyKat - jak pusty to usowa
+rm -rf nowykat - usuwa z plikami rekurencyjnie
+
+4. wynik ls-l przekierowało do wc -l /// Przekierowuje
+ls -l | wc -l 
+wc -l - ilosc wierszy
+wc - ile linii, ile slow, ile wazy 
+wc -w - slowa
+wc -l - linie
+
+
+Dokładanie zawartosc pliku a2 do a1
+mkdir 1
+cd 1
+ls
+echo "to jest" > a1
+echo "plik" > a2
+cat a2 >> a1
+cat a1
+
+5. Kopiowanie 
+cp co gdzie 
+cp a1 a3
+ls
+a1 a2 a3
+
+cd
+cp lista.txt 1 - kopiuje lista.txt do folderu o nazwie 1
+cp lista.txt 1/nowaNazwa.txt - kopiuje lista.txt do folderu 1 ale o nazwie nowaNazwa.txt
+
+6.Przenoszenie
+mv - przenoszenie
+
+mv co gdzie 
+
+mv lista.txt 1 - przeniesienie lista.txt do katalogu 1
+mv lista.txt nazwaNowa - zmiana nazwy listy.txt 
+
+mv lista.txt folder/nowaNazwa 
+
+7.Nadawanie uprawnień
+cd folder
+
+chmod 742 -zmienia uprawnienia dla folderu ale nie dla plikow w nim sie znajdujacych
+
+chmod 777 -R -zmienia uprawnienia dla folderu dla plikow w nim sie znajdujacych
+
+742 
+  u     g     o
+r w x r w x r w x
+4 2 1 4 2 1 4 2 1 
+r w x r - - - w - 
+
+8. Tworzenie skrotow - dowiązanie symboliczne
+ln -s co gdzie nazwa
+cd .. 
+pwd 
+cd 1 
+pwd 
+ln -s /home/inf1 dom
+ls -l
+ln -s ~ dom1
+
+ln -s ~ /home/inf1/1/dom2
+ls -l 1
+
+ln -s ~  ./1/dom3
+ls -l 1
+
+9. Szukanie find/grep
+find - szuka nazw 
+grep - szuka zawartosci plikow txt
+
+plik dostep mniej niz 5 min temu
+a - czas dostepu 
+[acm] min
+-c - kiedy miał zmieniony czas
+-m - modify 
+
+amin 5 - ile minut temu był dostep
+moze byc -/+
+
+ctime 5 - dni
+-type f - szukamy plikow
+find -type f -name 'n*' -amin -5
+Szukaj wszytkich plikow ktore sa plikami i zaczynaja sie na n i dostep miniej niz 5minut 
+
+find -name 'n*' -mmin +5 - wszystkie pliki 
+
+find -iname 'N*' -mmin +5 - wszystkie pliki, bez rozrozniania na wielkosc liter 
+
+find -perm 777 
+ 
+We should be able to do it anyway we should be able to do it anyway because we should be able to do it anyway so what about typing very fast 
+i don't really know because we should go for die audience
+we should be able to do it anyway because we should be able to look for the answer and there is the story about what are you going to do it anyway so let's find the answer for that question maybe we will be the 
+ones who can solve this mystery but we have to think very hard to come up with the answer. So there we are at the end of the Dragon Ball story thank you and see you later guys. Write a book is very hard because when you don't really know what to write about we should be able to do it anyway maybe after sometime someone else will find the key to the chest
+and then we will have the chance to open it and see what that treause is 
+let's hope and never forget about this i hope we will live this long to see this beacause i really enjoyed yeah me too. So till me again guys. 
+What wiil be in the next episode of one piece will luffy find the answer to the greatest question. No more questions my honour. I don't really know we should be able to do it anyway let's begin we should be able to do it anyway maybe we should be able i hope somehow i manage to do this maybe.
+
+
+grep zip *.txt - znajduje wszytko gdzie znajduje sie slowo zip
+
+grep '^zip' *.txt - gdzie na poczatku jest slowo zip
+
+grep '[0-9]$' *.txt - wszędzie gdzie jest cyfra od 0 do 9.
+
+grep '[0-9]$' *.txt | less - przekierowanie do komendy less
+
+grep '^/s ala' zad5 - ala ale jest spacja na poczatku
+
+grep -E '^\s*(ala|alla)' zad5
+
+10. Przypisywanie 
+a=6
+echo $a
+b=4
+c=$[$a+$b]
+echo $c
+
+11. Warunki 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
