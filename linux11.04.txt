@@ -1,0 +1,43 @@
+Zad 1
+cat /etc/passwd | cut -d”:” -f1,3,6
+cat /etc/passwd | tr -s ":" | cut -d":" -f1,3,5
+cat /etc/passwd | tr -s ":" | cut -d":" -f1,3,5 | tr ":" " "
+
+- wypisuje scieżki głównych katalgów 
+
+# Tworzenie skryptu
+s169396@orfi:~$ cd lab7/
+s169396@orfi:~/lab7$ nano
+s169396@orfi:~/lab7$ ls
+hello_world
+s169396@orfi:~/lab7$ cat hello_world
+#!/bin/bash
+#komentarz
+echo 'Hello world!' # to tekst
+s169396@orfi:~/lab7$ ls -l
+razem 4
+-rw-r--r-- 1 s169396 domain users 54 04-11 11:17 hello_world
+s169396@orfi:~/lab7$
+
+s169396@orfi:~/lab7$ chmod 755 hello_world
+
+s169396@orfi:~/lab7$ ./hello_world
+Hello world!
+
+Zad 2 
+s169396@orfi:~/lab7$ ls -l  ./hello_world | cut -d" " -f1,6,9
+
+Zad 3
+• echo ${#a} - ilosc znakow 
+• echo ${zmienna%Pliki*} - co jest w folderze Pliki(wyspiuje sciezke)
+• echo ${zmienna%%Pliki*} - jaki folder jest nadrzędny do folder Pliki(podaje scieżke).
+• echo ${zmienna#*Pliki} - wypisuje sciezke (plikow podrzednych).
+• echo ${zmienna##*Pliki} - wypisuje sciezke (ostani plik) w sciezce.
+
+Zad 4
+
+
+
+
+
+
