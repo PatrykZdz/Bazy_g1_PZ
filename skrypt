@@ -1,0 +1,16 @@
+
+#!/bin/bash
+read a
+read b
+read c
+read d
+
+echo a=$a
+echo b=$b
+echo c=$c
+echo d=$d
+
+if [$a = "las" || $b = "las" ||$c = "las" || $d = "las"]];
+then echo "True";
+else echo "False";
+fi
