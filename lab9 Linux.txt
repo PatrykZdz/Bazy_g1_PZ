@@ -1,0 +1,15 @@
+Zad 1
+1. ps -A|less| wc -l
+2. ps -u root -f
+3.
+4. ps -A -f Odp: 80
+
+
+16 maja kolokwium z SO
+
+Zad 2
+1. top T
+2. top M
+3. PID: 1698551 
+PPID:1697457
+PR: 20
