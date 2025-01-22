@@ -34,6 +34,12 @@ endfor
 imshow(obrazek);
 
 
+
+
+
+
+
+
 # ZAD 4
 zielony = obrazek(:,:,2);
 mediana = median(zielony(:));
@@ -79,6 +85,11 @@ obrazek_out = rn; obrazek_out(:,:,2) = gn; obrazek_out(:,:,3) = bn;
 imshow(obrazek_out/255);
 
 
+
+
+
+
+
 # ZAD 3
 obrazek = imread('rzeczka.jpg');
 !!!! 50% 
@@ -116,6 +127,10 @@ endfunction
 [Rn, Gn, Bn] = kol_zad_6(img_lut(:, :, 1), img_lut(:, :, 2), img_lut(:, :, 3));
 wynikowy_obraz = cat(3,Rn,Gn,Bn);
 imshow(uint8(wynikowy_obraz));
+
+
+
+
 
 
 
@@ -162,6 +177,14 @@ Macierz Obróbki Całkowitej (MOC):
     0.7071   -0.7071  -82.9289
     0.7071    0.7071   -1.2132
          0         0    1.0000
+
+
+
+
+
+
+
+
 
 # ZAD 3
 % Wczytanie punktów z pliku punktman.csv
