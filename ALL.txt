@@ -1,0 +1,184 @@
+ODP: 
+# ZAD 1
+clc;
+clf;
+clear;
+
+# ZAD 3
+obrazek = imread('rzeczka.jpg');
+
+# ZAD 4
+szerokosc = size(obrazek,2);
+wysokosc = size(obrazek,1);
+disp(szerokosc);
+disp(wysokosc);
+
+# ZAD 5
+nowa_szerokosc = floor(szerokosc/10) * 10;
+obrazek = obrazek(:, 1:nowa_szerokosc,:);
+
+# ZAD 6
+szerokosc = size(obrazek,2);
+wysokosc = size(obrazek,1);
+disp(" ");
+disp(szerokosc);
+disp(wysokosc);
+
+# ZAD 7
+for kolumny_start = 11:20:szerokosc
+  kolumny_koniec = kolumny_start+9;
+  obrazek(:,kolumny_start:kolumny_koniec,:) = 0;
+endfor
+
+# ZAD 8
+imshow(obrazek);
+
+
+# ZAD 4
+zielony = obrazek(:,:,2);
+mediana = median(zielony(:));
+LUT = zeros(1,256);
+
+for i = 0:255
+  if i <= mediana
+    LUT(i+1) = 30 + (204/mediana) * i;
+  else
+    LUT(i+1) = 234;
+  end
+end
+
+#ZAD 5
+for i = 1:3
+  obrazek(:,:,i) = LUT(uint8(obrazek(:,:,i))+1);
+end
+imshow(obrazek/255);
+
+#ZAD 6
+function [Rn, Gn, Bn] = kol_zad_6(R, G, B)
+  K = R-B;
+  temp = B+0.5*K;
+  L=G-temp;
+  M=temp+0.5*L;
+
+  if M > 100
+    L_nowy = 0.9 * L;
+  else
+    L_nowy = 64+0.4*L;
+  end
+
+  temp = M-0.5 * L_nowy;
+  Gn = L_nowy +temp;
+  Bn = temp-0.5*K;
+  Rn=B+K;
+endfunction
+
+clear;
+obrazek = double(imread('rzeczka.jpg'));
+[rn, gn, bn] = kol_zad_6(obrazek(:,:,1), obrazek(:,:,2), obrazek(:,:,3));
+obrazek_out = rn; obrazek_out(:,:,2) = gn; obrazek_out(:,:,3) = bn;
+imshow(obrazek_out/255);
+
+
+# ZAD 3
+obrazek = imread('rzeczka.jpg');
+!!!! 50% 
+# ZAD 4
+sr = mean(obrazek(:));
+LUT = zeros(1,256);
+for i = 0:255
+  if i < sr
+    LUT(i+1) = i/10;
+  else
+    LUT(i+1) = (i-sr)/(255-sr) * 255 +10;
+  endif
+endfor
+
+# ZAD 5
+obrazek = double(obrazek);
+obrazek_lut = uint8(arrayfun(@(x) LUT(x + 1), obrazek));
+imshow(obrazek_lut);
+
+# ZAD 6
+function [Rn, Gn, Bn] = kol_zad_6(R,G,B)
+  K = 0.25*R+0.5*G+0.25*B;
+  L = 0.5*R-0.5*B;
+  M = -0.25*R+0.5*G-0.25*B;
+
+  K_new = K;
+  K_new(K>128) = 103+0.2* (K(K>128));
+  K_new(K<=128) = K(K <=128);
+
+  Rn = K_new + L - M;
+  Gn = K_new + M;
+  Bn = K_new - L - M;
+endfunction
+
+[Rn, Gn, Bn] = kol_zad_6(img_lut(:, :, 1), img_lut(:, :, 2), img_lut(:, :, 3));
+wynikowy_obraz = cat(3,Rn,Gn,Bn);
+imshow(uint8(wynikowy_obraz));
+
+
+
+Dla obrazka wejściowego:
+11 12 12  
+22 23 24  
+31 32 32 
+
+Skalowanie do szerokości 4 i wysokości 3:
+W nowym obrazie należy dodać dodatkową kolumnę (czwarta kolumna). Dla algorytmu najbliższego sąsiada powtarzamy wartości najbliższego piksela:
+
+Pierwszy wiersz: powtarzamy ostatnią kolumnę (12) => 11 12 12 12.
+Drugi wiersz: powtarzamy drugą kolumnę (23) => 22 23 23 24.
+Trzeci wiersz: powtarzamy ostatnią kolumnę (32) => 31 32 32 32.
+
+# ZAD 1
+Wynikowy obrazek:
+11 12 12 12  
+22 23 23 24  
+31 32 32 32  
+
+# ZAD 2 
+% Macierz translacji do punktu (10, 20)
+T1 = [1 0 -10; 0 1 -20; 0 0 1];
+
+% Macierz obrotu o 45 stopni
+theta = pi / 4; % kąt w radianach
+R = [cos(theta) -sin(theta) 0; sin(theta) cos(theta) 0; 0 0 1];
+
+% Macierz translacji powrotnej
+T2 = [1 0 10; 0 1 20; 0 0 1];
+
+% Macierz przesunięcia x o -100
+Tx = [1 0 -100; 0 1 0; 0 0 1];
+
+% Wyliczenie macierzy MOC
+MOC = Tx * T2 * R * T1;
+
+% Wyświetlenie wyniku
+disp('Macierz Obróbki Całkowitej (MOC):');
+disp(MOC);
+
+Macierz Obróbki Całkowitej (MOC):
+    0.7071   -0.7071  -82.9289
+    0.7071    0.7071   -1.2132
+         0         0    1.0000
+
+# ZAD 3
+% Wczytanie punktów z pliku punktman.csv
+punkty = csvread('punktman.csv');
+
+% Macierz Obróbki Całkowitej
+M = [1 10 0; 0 100 0; 0 0 1];
+
+% Przekształcenie punktów
+punkty_obrobione = (M * [punkty'; ones(1, size(punkty, 1))])';
+
+% Wyznaczenie minimalnej wartości x
+min_x = min(punkty_obrobione(:, 1));
+
+% Wyświetlenie wyniku
+disp('Minimalna wartość x:');
+disp(min_x);
+
+Minimalna wartość x:
+-6766
