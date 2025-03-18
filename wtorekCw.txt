@@ -1,0 +1,103 @@
+# wczytywanie z pliku txt tabelki
+		  a1	a2	a3	a4	a5	a6	d
+	o1	1   1   1   1   3	  1   1
+	o2	1   1   1   1   3   2   1
+	o3	1   1   1   3   2   1   0
+	o4	1   1   1   3   3   2   1
+	o5	1   1   2   1   2   1   0
+	o6	1   1   2   1   2   2   1
+	o7	1   1   2   2   3   1   0
+	o8	1   1   2   2   4   1   1 
+
+# Zasady: Cij = {aeA:a(oi)=a(oj)} dla (oi)!= d(oj)
+ze o1(a1=1 ma d=1) a o3(a1=1 ale ma d=0 itd)
+
+o1 :[(#o3 jakby)[a1,a2,a3,a6],(#o5) [a1,a2,a4,a6],#(o7)[a1,a2,a5,a6]]
+kom o1 = a1,a2,a3,a4,a5,a6 - sprzecznosc 
+#a1 sprzecznosc z o3 a1 
+
+
+o2 =[[a1,a2,a3],[a1,a2,a4],[a1,a2,a5]]
+kom(kombinacje) = a1,a2,a3,a4,a5
+(a6=2) => (d=1) - wynik reguła 
+
+o3- wszystkie kombinacje jak w o1
+
+o4 =[[a1,a2,a3,a4],[a1,a2],[a1,a2,a5]]
+kom o4 = a1,a2,a3,a4,a5
+z (a6=2)=>(d=1) - wynik reguly
+
+o5 - wszystkie kombinacje jak w o1
+
+o6 = [[a1,a2,a5], [a1,a2,a3,a4,a5],[a1,a2,a3]]
+kom o6 = a1,a2,a3,a4,a5
+(a6 = 2)=>(d=1)
+
+o7 = wszystkie kombinajce
+
+o8 = [[a1,a2,a6],[a1,a2,a3,a6],[a1,a2,a3,a4,a6]]
+kom o8 = a1,a2,a3,a4, a5
+(a5=4) => (d=1)
+
+Wszytskie reguly:
+(a6=2)=>(d=1)
+(a6=2)=>(d=1)
+(a6=2)=>(d=1)
+(a5=4) => (d=1)
+
+Wynik po sumie: I reguła 
+(a6=2)=>(d=1)[3] - trzykrotnie
+(a5=3)=>(d=1)    - bez [1]
+
+na konsoli musi być macierz ta z szarymi polami (macierz nieodróżnialnosci)
+
+Reguła II rzędu 
+
+		  a1	a2	a3	a4	a5	a6	d
+	o1	1   1   1   1   3	  1   1
+	o2	1   1   1   1   3   2   1
+	o3	1   1   1   3   2   1   0
+	o4	1   1   1   3   3   2   1
+	o5	1   1   2   1   2   1   0
+	o6	1   1   2   1   2   2   1
+	o7	1   1   2   2   3   1   0
+	o8	1   1   2   2   4   1   1 
+
+	(a6=2)=>(d=1)[3] 
+	(a5=3)=>(d=1)   
+
+	II rząd 
+
+	o1 = [[a1,a2,a3,a6],[a1,a2,a4,a6],[a1,a2,a5,a6]]
+	po kolei wszystkie kombinacje z pierwszej tablicy itd dla kolejnych tabel 
+
+	kom o1 = (a1,a2),(a1,a3)(a1,a6),(a2,a3),(a2,a6),(a3,a6),(a1,a4),(a2,a4)
+	(a4,a6),(a1,a5),(a2,a5),(a5,a6) - bez powtorzen tych samych inna 
+
+	Reguły II rzędu z o1: (reszta brakujacych kombinacji w kom o1):
+	(a3=1)&(a4=1) =>(d=1)
+	(a3=1)&(a5=3) =>(d=1)
+	(a4=1)&(a5=3) =>(d=1)
+
+	II rząd
+
+	o2 =[[a1,a2,a3],[a1,a2,a4],[a1,a2,a5]]
+	kom o2 = (a1,a2),(a1,a3),(a2,a3),(a1,a4),(a2,a4),(a1,a5),(a2,a5) - tu pominac kombinacje: (a1,a6),(a2,a6),(a3,a6),(a4,a6),(a5,a6)
+	//nie trzeba brac reguł a6 bo jest juz w regule I bo tak to wiecej regul II rzedu bedzie az 8. 
+
+	Reguły II rzędu z o2:
+	(a3=1)&(a4=1) =>(d=1)
+	(a3=1)&(a5=3) =>(d=1)
+	(a4=1)&(a5=3) =>(d=1) 
+
+
+	for i in ds:
+		for j in ds:
+			if i == j:
+				continue
+			if i[d] == j[d]
+				continue
+			for k in atry:
+
+
+/// kombinacje intertools mozna uzyc 
