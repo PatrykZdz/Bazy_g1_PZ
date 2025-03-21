@@ -1,0 +1,2 @@
+class PeselValidator():
+    pass
