@@ -1,0 +1,231 @@
+// CONFIG2
+#pragma config POSCMOD = HS             // Primary Oscillator Select (HS Oscillator mode selected)
+#pragma config OSCIOFNC = OFF           // Primary Oscillator Output Function (OSC2/CLKO/RC15 functions as CLKO (FOSC/2))
+#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor (Clock switching and Fail-Safe Clock Monitor are disabled)
+#pragma config FNOSC = PRIPLL           // Oscillator Select (Primary Oscillator with PLL module (HSPLL, ECPLL))
+#pragma config IESO = OFF               // Internal External Switch Over Mode (IESO mode (Two-Speed Start-up) disabled)
+ 
+// CONFIG1
+#pragma config WDTPS = PS32768          // Watchdog Timer Postscaler (1:32,768)
+#pragma config FWPSA = PR128            // WDT Prescaler (Prescaler ratio of 1:128)
+#pragma config WINDIS = ON              // Watchdog Timer Window (Standard Watchdog Timer enabled,(Windowed-mode is disabled))
+#pragma config FWDTEN = OFF             // Watchdog Timer Enable (Watchdog Timer is disabled)
+#pragma config ICS = PGx2               // Comm Channel Select (Emulator/debugger uses EMUC2/EMUD2)
+#pragma config GWRP = OFF               // General Code Segment Write Protect (Writes to program memory are allowed)
+#pragma config GCP = OFF                // General Code Segment Code Protect (Code protection is disabled)
+#pragma config JTAGEN = OFF             // JTAG Port Enable (JTAG port is disabled)
+ 
+#include "xc.h"
+#include <libpic30.h>
+#define GET_BIT(value, bitNumber) ((value >> bitNumber) & 1) // Makro do odczytu konkretnego bitu
+#define MAX_LED_COUNT 8
+ 
+unsigned short ledBuffer = 0x00; // Bufor wy?wietlania LED
+int cycleCounter = 0; // Licznik cykli
+int litLEDs = 0; // Liczba zapalonych LED
+int cycleLimit = MAX_LED_COUNT; // Maksymalna liczba cykli
+ 
+// Funkcja licznika rosn?cego (od 0 do 255)
+void countUp() {
+    static unsigned countValue = 0;
+    LATA = countValue; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+    countValue++;
+    if (countValue > 255) {
+        countValue = 0;
+    }
+}
+ 
+// Funkcja licznika malej?cego (od 255 do 0)
+void countDown() {
+    static unsigned countValue = 255;
+    LATA = countValue; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+    if (countValue == 0) {
+        countValue = 255;
+    } else {
+        countValue--;
+    }
+}
+ 
+// Konwersja liczby binarnej na kod Graya
+unsigned int binaryToGrayCode(unsigned int num) {
+    return num ^ (num >> 1);
+}
+ 
+// Konwersja kodu Graya na liczb? binarn?
+unsigned grayCodeToBinary(unsigned gray) {
+    unsigned binary = gray;
+    while (gray >>= 1) {
+        binary ^= gray;
+    }
+    return binary;
+}
+ 
+// Licznik Graya malej?cy
+void grayCodeCounterDown() {
+    static unsigned grayValue = 0x80;  
+    LATA = grayValue; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie  
+    unsigned binaryValue = grayCodeToBinary(grayValue);
+    if (binaryValue == 0) {
+        binaryValue = 0xFF;
+    } else {
+        binaryValue--;
+    }
+    grayValue = binaryToGrayCode(binaryValue);
+}
+ 
+// Licznik Graya rosn?cy
+void grayCodeCounterUp() {
+    static unsigned grayValue = 0;
+    grayValue++;
+    grayValue &= 0xFF;
+    unsigned grayCode = grayValue ^ (grayValue >> 1);
+    LATA = grayCode; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+}
+ 
+// Licznik BCD rosn?cy (od 00 do 99)
+void bcdCounterUp() {
+    static unsigned char tens = 0;
+    static unsigned char units = 0;
+    LATA = (tens << 4) | units; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+    units++;
+    if (units > 9) {
+        units = 0;
+        tens++;
+        if (tens > 9) {
+            tens = 0;
+        }
+    }
+}
+ 
+// Licznik BCD malej?cy (od 99 do 00)
+void bcdCounterDown() {
+    static unsigned char tens = 9;
+    static unsigned char units = 9;
+    LATA = (tens << 4) | units; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+    if (units == 0) {
+        units = 9;
+        if (tens == 0) {
+            tens = 9;
+        } else {
+            tens--;
+        }
+    } else {
+        units--;
+    }
+}
+ 
+// Symulacja w??a LED
+void snakeLED() {
+    static unsigned char snakePosition = 0;
+    static int snakeDirection = -1;
+    unsigned char snake;
+    snake = (0b111 << snakePosition) & 0xFF; // Wy?wietlanie "w??a" na diodach
+    LATA = snake;
+    __delay32(1000000); // Opó?nienie
+ 
+    if (snakePosition == 5 || snakePosition == 0) {
+        snakeDirection = -snakeDirection; // Zmiana kierunku w??a
+    }
+    snakePosition += snakeDirection;
+}
+ 
+// Symulacja kolejki LED
+void ledQueue() {
+    LATA = ledBuffer; // Wy?wietlanie bufora na diodach
+    ledBuffer = 0;
+    ledBuffer |= (((1UL << litLEDs) - 1) << (MAX_LED_COUNT - litLEDs));
+    if (cycleCounter < cycleLimit) {
+        ledBuffer |= (1UL << (cycleCounter));
+    }
+    cycleCounter++;
+    if (cycleCounter >= cycleLimit) {
+        cycleCounter = 0;
+        litLEDs++;
+        cycleLimit--;
+        if (litLEDs >= MAX_LED_COUNT) {
+            cycleCounter = 0;
+            litLEDs = 0;
+            cycleLimit = MAX_LED_COUNT;
+        }
+    }
+    __delay32(1000); // Opó?nienie
+}
+ 
+// Generator liczb pseudolosowych LFSR
+int seed = 5;
+void randomGenerator() {
+    int bit0 = GET_BIT(seed, 0);
+    int bit1 = GET_BIT(seed, 1);
+    int bit4 = GET_BIT(seed, 4);
+    int bit5 = GET_BIT(seed, 5);
+    int feedback = bit0 ^ bit1 ^ bit4 ^ bit5; // Obliczenie sprz??enia zwrotnego
+    seed = (seed >> 1) | (feedback << 5); // Aktualizacja ziarna
+    LATA = seed; // Wy?wietlanie warto?ci na diodach
+    __delay32(1000000); // Opó?nienie
+}
+ 
+int main(void) {
+    TRISA = 0x0000; // Ustawienie portu A jako wyj?cie
+    TRISD = 0xFFFF; // Ustawienie portu D jako wej?cie
+    unsigned char currentProgram = 0; // Aktualnie uruchomiony program
+    int prevButtonState1 = 0; // Poprzedni stan przycisku 1
+    int prevButtonState2 = 0; // Poprzedni stan przycisku 2
+ 
+    while(1) {
+        // Wybór programu na podstawie warto?ci currentProgram
+        switch (currentProgram) {
+            case 0:
+                countUp(); // Licznik rosn?cy
+                break;
+            case 1:
+                countDown(); // Licznik malej?cy
+                break;
+            case 2:
+                grayCodeCounterUp(); // Licznik Graya rosn?cy
+                break;
+            case 3:
+                grayCodeCounterDown(); // Licznik Graya malej?cy
+                break;
+            case 4:
+                bcdCounterUp(); // Licznik BCD rosn?cy
+                break;
+            case 5:
+                bcdCounterDown(); // Licznik BCD malej?cy
+                break;
+            case 6:
+                snakeLED(); // Symulacja w??a LED
+                break;
+            case 7:
+                ledQueue(); // Symulacja kolejki LED
+                break;
+            case 8:
+                randomGenerator(); // Generator liczb pseudolosowych LFSR
+                break;
+        }
+ 
+        int buttonState1 = PORTDbits.RD7; // Odczyt stanu przycisku 1
+        int buttonState2 = PORTDbits.RD6; // Odczyt stanu przycisku 2
+        if (buttonState1 == 1 && prevButtonState1 == 0) {
+            currentProgram = (currentProgram + 1) % 9; // Prze??czanie programów do przodu
+            __delay32(100000); // Opó?nienie eliminuj?ce drgania styków
+        }
+        if (buttonState2 == 1 && prevButtonState2 == 0) {
+            if (currentProgram == 0) {
+                currentProgram = 8;
+            } else {
+                currentProgram = (currentProgram - 1) % 9; // Prze??czanie programów do ty?u
+            }
+            __delay32(100000); // Opó?nienie eliminuj?ce drgania styków
+        }
+        prevButtonState1 = buttonState1; // Aktualizacja stanu przycisku 1
+        prevButtonState2 = buttonState2; // Aktualizacja stanu przycisku 2
+        __delay32(1000000); // Opó?nienie mi?dzy iteracjami p?tli
+    }
+    return 0;
+}
