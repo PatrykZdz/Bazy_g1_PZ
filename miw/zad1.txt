@@ -1,0 +1,139 @@
+/*
+ * File:   ISI1_Bogdanski_zad1.c
+ * Author: local
+ *
+ * Created on March 27, 2024, 11:41 AM
+ */
+
+
+// CONFIG2
+#pragma config POSCMOD = NONE           // Primary Oscillator Select (HS Oscillator mode selected)
+#pragma config OSCIOFNC = OFF           // Primary Oscillator Output Function (OSC2/CLKO/RC15 functions as CLKO (FOSC/2))
+#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor (Clock switching and Fail-Safe Clock Monitor are disabled)
+#pragma config FNOSC = FRC              // Oscillator Select (Primary Oscillator with PLL module (HSPLL, ECPLL))
+#pragma config IESO = OFF               // Internal External Switch Over Mode (IESO mode (Two-Speed Start-up) disabled)
+ 
+// CONFIG1
+#pragma config WDTPS = PS32768          // Watchdog Timer Postscaler (1:32,768)
+#pragma config FWPSA = PR128            // WDT Prescaler (Prescaler ratio of 1:128)
+#pragma config WINDIS = ON              // Watchdog Timer Window (Standard Watchdog Timer enabled,(Windowed-mode is disabled))
+#pragma config FWDTEN = OFF             // Watchdog Timer Enable (Watchdog Timer is disabled)
+#pragma config ICS = PGx2               // Comm Channel Select (Emulator/debugger uses EMUC2/EMUD2)
+#pragma config GWRP = OFF               // General Code Segment Write Protect (Writes to program memory are allowed)
+#pragma config GCP = OFF                // General Code Segment Code Protect (Code protection is disabled)
+#pragma config JTAGEN = OFF             // JTAG Port Enable (JTAG port is disabled)
+ 
+#include "xc.h"
+#include <libpic30.h>
+#include <math.h>
+#define BIT_VALUE(value, noBit) ((value >> noBit) & 1)
+ 
+unsigned int portValue = 0, bcdValue = 0, queueMove = 0, queueBuffer = 0, tens = 0, ones = 0, queueEnd = 0, iq = 7, snakeMove = 0, snakeDir = 1, counter = 0, BIT = 0;
+char prev6 = 6, prev7 = 7, current6 = 0, current7, program = 0;
+int pseudoRandomValue = 1, xorValue = 0;
+ 
+int feedback(unsigned int value) {
+    // feedback based on b1110011
+    return BIT_VALUE(value, 0) ^ BIT_VALUE(value, 1) ^ BIT_VALUE(value, 2) ^ BIT_VALUE(value, 5) ^ BIT_VALUE(value, 6);
+}
+ 
+void __attribute__((interrupt, no_auto_psv)) _T1Interrupt(void) {
+    switch (program) {
+        case 0: // Binary counter from 0 to 255
+            portValue++;
+            LATA = portValue;
+            break;
+        case 1: // Binary counter from 255 to 0
+            portValue--;
+            LATA = portValue;
+            break;
+        case 2: // Gray counter from 0 to 255
+            portValue++;
+            LATA = (portValue >> 1) ^ portValue;
+            break;
+        case 3: // Gray counter from 255 to 0
+            portValue--;
+            LATA = (portValue >> 1) ^ portValue;
+            break;
+        case 4: // BCD counter from 0 to 99
+            bcdValue++;
+            ones = bcdValue % 10;
+            tens = (bcdValue - ones) / 10;
+            LATA = (tens * pow(2, 4) + ones);
+            break;
+        case 5: // BCD counter from 99 to 0
+            bcdValue--;
+            ones = bcdValue % 10;
+            tens = (bcdValue - ones) / 10;
+            LATA = (tens * pow(2, 4) + ones);
+            break;
+        case 6: // Snake moving left-right
+            if (snakeDir == 1) {
+                if (snakeMove == 5) snakeDir = 0;
+                snakeMove++;
+                LATA = 7 * pow(2, snakeMove);
+            } else {
+                if (snakeMove == 0) snakeDir = 1;
+                snakeMove--;
+                LATA = 7 * pow(2, snakeMove);
+            }
+            break;
+        case 7: // Queue
+            queueMove = 1 * pow(2, queueBuffer);
+            if (queueBuffer == iq) {
+                queueEnd = 255 - (pow(2, iq) - 1);
+                iq--;
+                queueMove = 0;
+                queueBuffer = 0;
+                LATA = queueEnd;
+            } else {
+                LATA = queueEnd + queueMove;
+                queueBuffer++;
+            }
+            break;
+        case 8: // Pseudo-random number generator based on b1110011
+            for (int i = 0; i < 5; i++) {
+                xorValue = feedback(pseudoRandomValue);
+                pseudoRandomValue = pseudoRandomValue >> 1;
+                pseudoRandomValue += xorValue << 7;
+                LATA = pseudoRandomValue;
+            }
+            break;
+    }
+    _T1IF = 0;
+}
+ 
+int main(void) {
+    TRISA = 0x0000;
+    TRISD = 0xFFFF;
+    T1CON = 0x8030;
+    _T1IE = 1;
+    _T1IP = 1;
+    PR1 = 0x0FFF;
+    while (1) {
+        // Navigate through programs using buttons
+        prev6 = PORTDbits.RD6;
+        prev7 = PORTDbits.RD7;
+        __delay32(15000);
+        current6 = PORTDbits.RD6;
+        current7 = PORTDbits.RD7;
+ 
+        if (current6 - prev6 == -1) { // Change program
+            program--;
+        }
+        if (current7 - prev7 == -1) {
+            program++;
+        }
+        if (program > 8) { // Prevent selection of invalid program
+            program = 0;
+        }
+        if (program < 0) {
+            program = 8;
+        }
+        if (bcdValue > 99) bcdValue = 1; // Prevent variables from going out of range
+        if (bcdValue == 0) bcdValue = 99;
+        if (queueBuffer > 8) queueBuffer = 0;
+        if (iq == 0) iq = 7, queueBuffer = 0, queueEnd = 0;
+    }
+    return 0;
+}
