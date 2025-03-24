@@ -1,0 +1,212 @@
+#pragma config POSCMOD = NONE           // Primary Oscillator (Primary oscillator disabled)
+#pragma config OSCIOFNC = OFF           // CLKO Output Signal Active on the OSCO Pin (CLKO output disabled)
+#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor (Clock switching and Fail-Safe Clock Monitor disabled)
+#pragma config FNOSC = FRC              // Oscillator Select (Fast RC Oscillator)
+#pragma config IESO = OFF               // Internal External Switch Over Mode (IESO mode disabled)
+ 
+// CONFIG1
+#pragma config WDTPS = PS32768          // Watchdog Timer Postscaler (1:32,768)
+#pragma config FWPSA = PR128            // WDT Prescaler (Prescaler ratio of 1:128)
+#pragma config WINDIS = ON              // Watchdog Timer Window Mode (Standard WDT selected; windowed WDT disabled)
+#pragma config FWDTEN = OFF             // Watchdog Timer Enable (WDT disabled)
+#pragma config ICS = PGx2               // Comm Channel Select (Emulator functions are shared with PGEC2/PGED2)
+#pragma config GWRP = OFF               // General Segment Write Protect (Writes to program memory are allowed)
+#pragma config GCP = OFF                // General Segment Code Protect (Code protection is disabled)
+#pragma config JTAGEN = OFF             // JTAG Port Enable (JTAG port is disabled)
+ 
+#include "xc.h"
+#include <libpic30.h>
+#include <stdio.h>
+#include <stdlib.h>
+ 
+// Define macros for readability and maintainability
+#define FCY         4000000UL   // Instruction cycle frequency
+ 
+// Define macros for LCD control pins
+#define LCD_E       LATDbits.LATD4
+#define LCD_RW      LATDbits.LATD5
+#define LCD_RS      LATBbits.LATB15
+#define LCD_DATA    LATE
+ 
+// Define macros for LCD commands
+#define LCD_CLEAR   0x01
+#define LCD_HOME    0x02
+#define LCD_ON      0x0C
+#define LCD_OFF     0x08
+#define LCD_CONFIG  0x38
+#define LCD_CURSOR  0x80
+#define LINE1       0x00
+#define LINE2       0x40
+#define LCD_CUST_CHAR   0x40
+#define LCD_SHIFT_R     0x1D
+#define LCD_SHIFT_L     0x1B
+ 
+// Delay functions
+void __delay_us(unsigned long us) {
+    __delay32(us * FCY / 1000000);
+}
+ 
+void __delay_ms(unsigned long ms) {
+    __delay32(ms * FCY / 1000);
+}
+ 
+// LCD command and data functions
+void LCD_sendCommand(unsigned char command) {
+    LCD_RW = 0;     // Write
+    LCD_RS = 0;     // Command
+    LCD_E = 1;      // Enable
+    LCD_DATA = command;
+    __delay_us(50);
+    LCD_E = 0;      // Disable
+}
+ 
+void LCD_sendData(unsigned char data) {
+    LCD_RW = 0;
+    LCD_RS = 1;     // Data
+    LCD_E = 1;
+    LCD_DATA = data;
+    __delay_us(50);
+    LCD_E = 0;
+}
+ 
+// LCD print function
+void LCD_print(unsigned char* string) {
+    while (*string) {
+        LCD_sendData(*string++);
+    }
+}
+ 
+// LCD cursor positioning function
+void LCD_setCursor(unsigned char row, unsigned char col) {
+    unsigned char address;
+    if (row == 1) {
+        address = LCD_CURSOR + LINE1 + col;
+    } else if (row == 2) {
+        address = LCD_CURSOR + LINE2 + col;
+    }
+    LCD_sendCommand(address);
+}
+ 
+// Function to save a custom character to CGRAM
+void LCD_saveCustChar(unsigned char slot, unsigned char *array) {
+    unsigned char i;
+    LCD_sendCommand(LCD_CUST_CHAR + (slot * 8));
+    for (i = 0; i < 8; i++) {
+        LCD_sendData(array[i]);
+    }
+}
+ 
+// LCD initialization function
+void LCD_init() {
+    __delay_ms(20);
+    LCD_sendCommand(LCD_CONFIG);
+    __delay_us(50);
+    LCD_sendCommand(LCD_ON);
+    __delay_us(50);
+    LCD_sendCommand(LCD_CLEAR);
+    __delay_ms(2);
+}
+ 
+// Function to increment a variable i up to n and reset to 0
+int append(int i, int n) {
+    return (i + 1) % n;
+}
+ 
+int main(void) {
+    unsigned portValue = 0x0001;
+    char current6 = 0, prev6 = 0, current7 = 0, prev7 = 0, power = 0, current8 = 0, prev8 = 0, current9 = 0, prev9 = 0;
+    int i = 0, start = 0, min = 0, sec = 0;
+    float timer = 0.0;
+    char minStr[5], secStr[5];
+ 
+    TRISB = 0x7FFF;     // Set direction registers
+    TRISE = 0x0000;
+    TRISA = 0x0080;     // Set port A as output
+    TRISD = 0xFFE7;     // Set port D as input
+ 
+    LCD_init();                     // Initialize LCD
+    LCD_setCursor(1, 0);            // Set cursor to the start of the first line
+ 
+    __delay_ms(500);
+ 
+    while (1) {
+        min = (int)(timer / 60); // Convert time to minutes
+        sec = (int)timer % 60;   // Convert time to seconds
+ 
+        sprintf(minStr, "%02d", min);
+        sprintf(secStr, "%02d", sec);
+ 
+        LCD_setCursor(1, 8);
+        LCD_print((unsigned char*)minStr);
+        LCD_print(":");
+        LCD_print((unsigned char*)secStr);
+         
+        if (start == 1) {
+            if (timer <= 0.0) start = 0;
+            else timer -= 0.15;   // Decrease timer by 0.1 second
+             __delay_ms(100);
+            prev6 = PORTDbits.RD6;      // Scan button states
+            prev7 = PORTDbits.RD7;
+            prev8 = PORTAbits.RA7;
+            prev9 = PORTDbits.RD13;
+ 
+            __delay_ms(100);
+ 
+            current6 = PORTDbits.RD6;
+            current7 = PORTDbits.RD7;
+            current8 = PORTAbits.RA7;
+            current9 = PORTDbits.RD13;
+ 
+        }
+        else{
+            prev6 = PORTDbits.RD6;      // Scan button states
+            prev7 = PORTDbits.RD7;
+            prev8 = PORTAbits.RA7;
+            prev9 = PORTDbits.RD13;
+ 
+            __delay_ms(200);
+ 
+            current6 = PORTDbits.RD6;
+            current7 = PORTDbits.RD7;
+            current8 = PORTAbits.RA7;
+            current9 = PORTDbits.RD13;
+        }
+ 
+        if (current8 - prev8 == 1) { // Reset button
+            timer = 0.0;
+        }
+ 
+        if (current9 - prev9 == 1) { // Start/stop button
+            start = append
+            (start, 2);
+        }
+ 
+        if (current7 - prev7 == 1) { // Add time button
+            timer += 15.0;
+        }
+ 
+        if (current6 - prev6 == 1) { // Change power button
+            power = append(power, 5);
+        }
+ 
+        if (power == 0) { // Display power level
+            LCD_setCursor(1, 0);
+            LCD_print("180W  ");
+        } else if (power == 1) {
+            LCD_setCursor(1, 0);
+            LCD_print("360W ");
+        } else if (power == 2) {
+            LCD_setCursor(1, 0);
+            LCD_print("600W ");
+        } else if (power == 3) {
+            LCD_setCursor(1, 0);
+            LCD_print("900W ");
+        } else if (power == 4) {
+            LCD_setCursor(1, 0);
+            LCD_print("1000W");
+        }
+     }
+ 
+    LCD_sendCommand(LCD_SHIFT_R);    // Shift display right
+    return 0;
+}
