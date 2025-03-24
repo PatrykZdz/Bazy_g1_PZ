@@ -1,0 +1,272 @@
+#pragma config POSCMOD = NONE           // Wybór g?ównego oscylatora (g?ówny oscylator wy??czony)
+#pragma config OSCIOFNC = OFF           // Funkcja wyj?cia g?ównego oscylatora (OSC2/CLKO/RC15 dzia?a jako CLKO (FOSC/2))
+#pragma config FCKSM = CSDCMD           // Prze??czanie zegara i monitor (Prze??czanie zegara i monitor awaryjny wy??czone)
+#pragma config FNOSC = FRC              // Wybór oscylatora (Szybki oscylator RC bez postskalera)
+#pragma config IESO = OFF               // Tryb prze??czania wewn?trznego/zewn?trznego (Tryb IESO wy??czony)
+ 
+// CONFIG1
+
+#pragma config WDTPS = PS32768          // Podzielnik czasu Watchdog Timer (1:32,768)
+#pragma config FWPSA = PR128            // Preskaler WDT (Preskaler 1:128)
+#pragma config WINDIS = ON              // Okno Watchdog Timer (Standardowy Watchdog Timer w??czony, tryb okienkowy wy??czony)
+#pragma config FWDTEN = OFF             // W??czenie Watchdog Timer (Watchdog Timer wy??czony)
+#pragma config ICS = PGx2               // Wybór kana?u komunikacyjnego (Emulator/debugger u?ywa EMUC2/EMUD2)
+#pragma config GWRP = OFF               // Ochrona zapisu segmentu kodu (Zapisy do pami?ci programu dozwolone)
+#pragma config GCP = OFF                // Ochrona kodu segmentu ogólnego (Ochrona kodu wy??czona)
+#pragma config JTAGEN = OFF             // W??czenie portu JTAG (Port JTAG wy??czony)
+#include "xc.h"
+#include <libpic30.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define FCY         4000000UL   // Cz?stotliwo?? robocza oscylatora jako po?owa cz?stotliwo?ci (FNOSC = FRC -> FCY = 4000000)
+#define LCD_E       LATDbits.LATD4
+#define LCD_RW      LATDbits.LATD5
+#define LCD_RS      LATBbits.LATB15
+#define LCD_DATA    LATE
+#define LCD_CLEAR   0x01    // 0b00000001
+#define LCD_HOME    0x02    // 0b00000010
+#define LCD_ON      0x0C    // 0b00001100
+#define LCD_OFF     0x08    // 0b00001000
+#define LCD_CONFIG  0x38    // 0b00111000
+#define LCD_CURSOR  0x80    // 0b10000000
+#define LINE1       0x00
+#define LINE2       0x40
+#define LCD_CUST_CHAR   0x40    // 0b01000000
+#define LCD_SHIFT_R     0x1D    // 0b00011100
+#define LCD_SHIFT_L     0x1B    // 0b00011000
+ 
+void __delay_us(unsigned long us) {
+    __delay32(us * FCY / 1000000);
+}
+ 
+void __delay_ms(unsigned long ms) {
+    __delay32(ms * FCY / 1000);
+}
+ 
+void LCD_sendCommand(unsigned char command) {
+    LCD_RW = 0;     // Zapis
+    LCD_RS = 0;     // Przesy?anie komend
+    LCD_E = 1;      // Otwarcie transmisji danych
+    LCD_DATA = command;
+    __delay_us(50); // Opó?nienie konieczne dla zapisania danych
+    LCD_E = 0;      // Konieczne zablokowanie transmisji po przes?aniu komunikatu
+}
+ 
+void LCD_sendData(unsigned char data) {
+    LCD_RW = 0;
+    LCD_RS = 1;     // Przesy?anie danych
+    LCD_E = 1;
+    LCD_DATA = data;
+    __delay_us(50);
+    LCD_E = 0;
+}
+ 
+void LCD_print(const char* string) {
+    while (*string) {
+
+        LCD_sendData(*string++);
+    }
+}
+ 
+void LCD_setCursor(unsigned char row, unsigned char col) {
+    unsigned char address;
+    if (row == 1) {
+        address = LCD_CURSOR + LINE1 + col;
+    }
+
+    if (row == 2) {
+        address = LCD_CURSOR + LINE2 + col;
+    }
+    LCD_sendCommand(address);
+}
+ 
+void LCD_saveCustChar(unsigned char slot, unsigned char *array) {
+    unsigned char i;
+    LCD_sendCommand(LCD_CUST_CHAR + (slot * 8));
+
+    for (i = 0; i < 8; i++) {
+        LCD_sendData(array[i]);
+    }
+}
+ 
+void LCD_init() {
+    __delay_ms(20);
+    LCD_sendCommand(LCD_CONFIG);
+    __delay_us(50); // Opó?nienia wynikaj? ze specyfikacji wy?wietlacza i czasu przetwarzania poszczególnych komend
+    LCD_sendCommand(LCD_ON);
+    __delay_us(50);
+    LCD_sendCommand(LCD_CLEAR);
+    __delay_ms(2);
+}
+ 
+int append(int i, int n) {
+    return (i + 1) % n;
+}
+ 
+int convert(float a) {
+    return (int)a;
+}
+ 
+int main(void) {
+
+    unsigned portValue = 0x0001;
+    char current6 = 0, prev6 = 0, current7 = 0, prev7 = 0, micPower = 0, current8 = 0, prev8 = 0, current9 = 0, prev9 = 0; // Zmienne dla przycisków
+    int i = 0, start = 0, g1mins = 0, g1secs = 0, g2mins = 0, g2secs = 0, player = 0, timeMode = 0, startTime = 0;
+    char g1minsTxt[5], g1secsTxt[5], g2minsTxt[5], g2secsTxt[5];
+    float g1Timer = 30, g2Timer = 30;
+    TRISB = 0x7FFF;     // Ustawienie rejestrów kierunku
+    TRISE = 0x0000;
+    TRISA = 0x0080;     // Port A ustawiony jako wyj?cie
+    TRISD = 0xFFE7;     // Port D ustawiony jako wej?cie
+    LCD_init();                     // Inicjalizacja wy?wietlacza
+    LCD_setCursor(1, 0);            // Ustawienie kursora na pocz?tku pierwszej linii
+ 
+    while (1) {
+        startTime = 1 * 30 * (timeMode + 1); // Ustaw nowy tryb gry
+        g1mins = (convert(g1Timer) - (convert(g1Timer) % 60)) / 60; // Przekonwertuj czasy graczy na minuty i sekundy
+        g1secs = convert(g1Timer) % 60;
+        g2mins = (convert(g2Timer) - (convert(g2Timer) % 60)) / 60;
+        g2secs = convert(g2Timer) % 60;
+        sprintf(g1minsTxt, "%d", g1mins);
+        sprintf(g1secsTxt, "%d ", g1secs);
+        sprintf(g2minsTxt, "%d", g2mins);
+        sprintf(g2secsTxt, "%d ", g2secs);
+        LCD_setCursor(1, 1); // Wy?wietl czasy graczy
+
+        if (player == 0) 
+            LCD_print(">Player1: ");
+        else 
+            LCD_print("Player1: ");
+
+        if (g1mins < 10) 
+            LCD_print("0");
+
+        LCD_print(g1minsTxt);
+        LCD_print(":");
+
+        if (g1secs < 10) 
+            LCD_print("0");
+
+        LCD_print(g1secsTxt);
+        LCD_setCursor(2, 1);
+
+        if (player == 1) 
+            LCD_print(">Player2: ");
+        else 
+            LCD_print("Player2: ");
+
+        if (g2mins < 10) 
+            LCD_print("0");
+
+        LCD_print(g2minsTxt);
+        LCD_print(":");
+
+        if (g2secs < 10) 
+            LCD_print("0");
+
+        LCD_print(g2secsTxt);
+ 
+        if (start == 1) {
+            prev6 = PORTDbits.RD6; // Skanowanie dla zmiany stanu przycisków
+            prev7 = PORTDbits.RD7;
+            prev8 = PORTAbits.RA7;
+            prev9 = PORTDbits.RD13;
+             __delay_ms(150);
+            current6 = PORTDbits.RD6;
+            current7 = PORTDbits.RD7;
+            current8 = PORTAbits.RA7;
+            current9 = PORTDbits.RD13;
+ 
+            if (player == 0) { // Odejmowanie czasu gracza #1, je?li to jego kolej
+                if (convert(g1Timer) <= 0) {
+                    start = 0;
+                    LCD_setCursor(1, 0);
+                    LCD_sendCommand(LCD_CLEAR);
+                    __delay_ms(2);
+                    LCD_print("Player 2 wins!");
+                    __delay_ms(2000);
+                    LCD_sendCommand(LCD_CLEAR);
+                    g1Timer = startTime;
+                    g2Timer = startTime;
+                    continue; // Restart the game loop
+
+                } else {
+                    g1Timer = g1Timer - 0.15;
+                }
+
+            } else if (player == 1) { // Odejmowanie czasu gracza #2, je?li to jego kolej
+                if (convert(g2Timer) <= 0) {
+                    start = 0;
+                    LCD_setCursor(1, 0);
+                    LCD_sendCommand(LCD_CLEAR);
+                    __delay_ms(2);
+                    LCD_print("Player 1 wins!");
+                    __delay_ms(2000);
+                    LCD_sendCommand(LCD_CLEAR);
+                    g1Timer = startTime;
+                    g2Timer = startTime;
+                    continue; // Restart the game loop
+
+                } else {
+                    g2Timer = g2Timer - 0.15;
+                }
+            }
+ 
+            __delay_ms(50);
+ 
+            if (current9 - prev9 == 1) { // Przycisk zmie? gracza
+                player++;
+                if (player > 1) player = 0;
+            }
+
+            if (current6 - prev6 == 1) { // Przycisk zacznij gr?
+                start++;
+                if (start > 1) start = 0;
+            }
+ 
+            if (current8 - prev8 == 1) { // Przycisk reset zegara
+                g1Timer = startTime;
+                g2Timer = startTime;
+                break;
+            }
+
+        } else {
+            prev6 = PORTDbits.RD6; // Skanowanie dla zmiany stanu przycisków
+            prev7 = PORTDbits.RD7;
+            prev8 = PORTAbits.RA7;
+            prev9 = PORTDbits.RD13;
+            __delay_ms(150);
+            current6 = PORTDbits.RD6;
+            current7 = PORTDbits.RD7;
+            current8 = PORTAbits.RA7;
+            current9 = PORTDbits.RD13;
+ 
+            if (current9 - prev9 == 1) { // Przycisk zmie? gracza
+                player++;
+                if (player > 1) player = 0;
+            }
+
+            if (current6 - prev6 == 1) { // Przycisk zacznij gr?
+                start++;
+                if (start > 1) start = 0;
+            }
+ 
+            if (current7 - prev7 == 1) { // Przycisk zmie? tryb gry
+                timeMode = append(timeMode, 4);
+                g1Timer = startTime;
+                g2Timer = startTime;
+            }
+ 
+            if (current8 - prev8 == 1) { // Przycisk reset zegara
+                g1Timer = startTime;
+                g2Timer = startTime;
+                break;
+            }
+        }
+    }
+ 
+    LCD_sendCommand(LCD_SHIFT_R); // Przesuni?cie ca?ej zawarto?ci o jedno miejsce w prawo
+
+    return 0;
+
+}
