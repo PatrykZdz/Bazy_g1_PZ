@@ -1,0 +1,98 @@
+LEM2
+a - klasa (atrybut)
+o - obiekty 
+
+
+	  a1	a2	a3	a4	a5  d
+o1	2   6   1   2   3   1   reguła 
+o2	1   1   1   3   2   1   reguła 
+o3  2   1   1   2   3   1 	reguła
+o4  4   1   3   1   2   1 	reguła
+o5  3   5   2   1   3   2   Reguła 
+o6  3   1   3   1   1   2   Reguła
+o7  1   1   1   3   1   2   Reguła
+
+Podzielic system decyzyjne w slowniku 
+
+Szukam najczestszego deskryptora 
+(a2 = 1) n (a3 = 1) n (a1 = 1) n  (a4 = 3) n (a5 = 2) => (d=1) # REGUŁA niesprzeczna //pokrywa obiekt o2 
+
+(sprawdzan czy zachodzi sprzecznosc gdzies) sprzecznosc z o6, potem o1, sprzecznosc z o7
+
+(o1,o2,o3,o4) => (d=1)
+(a1 = 2) wystepuje 2 razy 
+(a2 = 1) wystepuje 3 razy
+(a3 = 1) wystepuje 3 razy
+(a4 = 2) wystepuje 2 razy
+(a5 = 3) wystepuje 2 razy 
+
+o2 odpada teraz o1, o3,o4 bo d = 1 
+
+o1,o2,o3 
+(a1 = 2) - 2 razy 
+(a2 = 1) - 2 razy
+(a3 = 1) - 2 razy 
+(a4 = 2) - 2 razy
+(a5 = 3) - 2 razy 
+
+(a1 = 2) => (d=1)[2] - regula niesprzeczna  
+
+(a1 = 4) => (d=1)
+
+
+3 Reguły dla obiektów z decyzja 1: 
+
+(a2 = 1) n (a3 = 1) n (a1 = 1) n  (a4 = 3) n (a5 = 2) => (d=1)
+(a1 = 2) => (d=1)[2] - regula niesprzeczna  
+(a1 = 4) => (d=1)
+
+dla d=1
+
+(a1 = 3) - 2 razy   (a1 = 3) => d=2 [2]
+(a2 = 1) - 2 razy 	(a1 = 1)n(a2=1)n(a3=1)n(a4=3)n(a5=1)=>d=2
+(a3 = 2) - 1 raz
+(a4 = 1) - 2 razy
+(a5 = 1) - 2 razy 
+
+slow = {1:[1,2,3,4], 2:[5,6,7]}
+
+slownik do wyboru najczestszego atrybutu 
+
+II przykład 
+
+	  a1	a2	a3	a4	a5  a6  d
+o1	1   1   1   1   3   1   1  	reguła  #4
+o2	1   1   1   1   3   2   1   reguła  #5
+o3  1   1   1   3   2   1 	0	  reguła  #2 
+o4  1   1   1   3   3   2 	1   reguła  #6
+o5  1   1   2   1   2   1   0   reguła  #1 - kolejn.
+o6  1   1   2   1   2   2   1   reguła  #7 
+o7  1   1   2   2   3   1   0	  reguła  #3 
+o8  1   1   2   2   4   1   1   reguła  #8
+
+Reguły dla d = 0
+# szukam niesprzecznosci 
+(a1 = 1) n (a2 = 1) n (a3 = 2) n (a6 = 1) n (a4 = 1) => (d = 0) #1
+
+dla o3,o7
+
+(a1 = 1) n (a2 = 1) n (a6 = 1) n (a3 = 1) n (a4 = 3) => (d = 0) #2
+
+(a1 = 1) n (a2 = 1) n (a3 = 2) n (a4 = 2) n (a5 = 3) = > (d = 0) #3
+
+
+Reguły dla d = 1 do momentu az nie jest sprzeczne 
+(a1 = 1) n (a2 = 1) n (a3 = 1) n (a5 = 3) => d=1[3] #4 #5 #6
+
+o6, o8 Jak jest sprzecznosc to dokładamy 
+Szukamy niesprzecznych reguł 
+
+(a1 = 1) n (a2 = 1) n (a3 = 2) n (a4 = 1) n (a5 = 2) n (a6 = 2) => d=1 #7
+
+o8
+
+(a1 = 1) n (a2 = 1) n (a3 = 2) n (a4 = 2) n (a5 = 4) => d=1 #8
+
+
+
+#zakonczenie dopoki obiekt nie pokryty szukam dla niego reguł 
