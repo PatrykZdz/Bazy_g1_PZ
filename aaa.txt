@@ -32,3 +32,21 @@ for obj in df.index:
         print(f"z {obj} brak")
 
 remaining = remaining.drop(index=removed_objects)
+
+
+Traceback (most recent call last):
+  File "D:\169396\project1\main.py", line 80, in <module>
+    remaining = remaining.drop(index=removed_objects)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\169396\project1\.venv\Lib\site-packages\pandas\core\frame.py", line 5581, in drop
+    return super().drop(
+           ^^^^^^^^^^^^^
+  File "D:\169396\project1\.venv\Lib\site-packages\pandas\core\generic.py", line 4788, in drop
+    obj = obj._drop_axis(labels, axis, level=level, errors=errors)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\169396\project1\.venv\Lib\site-packages\pandas\core\generic.py", line 4830, in _drop_axis
+    new_axis = axis.drop(labels, errors=errors)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\169396\project1\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 7070, in drop
+    raise KeyError(f"{labels[mask].tolist()} not found in axis")
+KeyError: "['o2', 'o8', 'o4', 'o6'] not found in axis"
