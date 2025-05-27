@@ -1,0 +1,42 @@
+p⊕ - pozytywne przypadki - 9
+p⊖ - negatywne przypadki - 5
+
+Entropy(S) = −p⊕log2p⊕ − p⊖log2p⊖
+
+Entropy(S) = Entropy[9+,5-] = -9/14log2(9/14) - 5/14log2(5/14)=
+-(log2(9/14^9/14 * 5/14^5/14)) = -log2(0.5211295762) ≈ 0.940
+
+
+Gain(S, A) = Entropy(S) −E  Sv/S ∗ Entropy(S)
+					  v∈Values(A)
+
+
+Entropy[3+,4-] = -3/7log2(3/7) - 4/7log2(4/7) = -(log2(3/7^3/7 * 4/7^4/7)) = 
+-log2(0.50514) ≈ 0.985
+
+Entropy[6+,1-] = -6/7log2(6/7) - 1/7log2(1/7) = -(log2(6/7^6/7 * 1/7^1/7)) = 
+-log2(0.6635730598) ≈ 0.592
+
+Gain(S,Wilgotność) = 0.940−(7/14∗0.985)−(7/14 ∗0.592)=
+= 0.940−0.4935−0.296= 0.151
+
+ 
+Entropy(Wiatr,Słaby) = -6/8log2(6/8) - 2/8log2(2/8) = 0.811
+Entropy(Wiatr,Mocny) = -3/6log2(3/6) - 3/6log2(3/6) = 1
+Gain(S,Pogoda) ≈ 0.246
+Gain(S,Temperatura) ≈ 0.029
+
+#Browarek ma calosc w zeszycie napisac 
+
+Kazda entropia ma byc i powyliczeniu 4 entropi i 4 zyskow informacyjnych
+#Podgląd wyników na konsoli
+- pogoda(pochmurna) => S(TAK)
+.
+.
+.
+.
+- pogoda(słoneczna) n Wilgotnosc(Wysoka) => S(TAK)
+
+
+# Ćoś takiego wynik
+- pogoda(słoneczna) n Wilgotnosc(Niska) => S(NIE)
